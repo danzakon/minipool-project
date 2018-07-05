@@ -11,7 +11,7 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
     private PhotonPlayer opponentPlayer;
     private AightBallPoolNetworkMessenger messenger;
 
-    public override void Inicialize()
+    public override void Initialize()
     {
         if (!messenger)
         {
@@ -21,22 +21,22 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
 
     protected override void Awake()
     {
-        base.Awake();
+  //      base.Awake();
         
-        sendRate = 10;
-        PhotonNetwork.sendRate = sendRate;
-        PhotonNetwork.sendRateOnSerialize = sendRate;
-        PhotonNetwork.autoJoinLobby = true;
-        PhotonNetwork.EnableLobbyStatistics = true;
-        photonView = gameObject.AddComponent<PhotonView>();
-        photonView.ObservedComponents = new List<Component>(0);
-        photonView.ObservedComponents.Add(this);
-        //photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
-        photonView.viewID = 1;
-        PhotonNetwork.automaticallySyncScene = true;
-        PhotonNetwork.BackgroundTimeout = 5.0f;
-		Debug.Log("Connect ");
-        Connect();
+  //      sendRate = 10;
+  //      PhotonNetwork.sendRate = sendRate;
+  //      PhotonNetwork.sendRateOnSerialize = sendRate;
+  //      PhotonNetwork.autoJoinLobby = true;
+  //      PhotonNetwork.EnableLobbyStatistics = true;
+  //      photonView = gameObject.AddComponent<PhotonView>();
+  //      photonView.ObservedComponents = new List<Component>(0);
+  //      photonView.ObservedComponents.Add(this);
+  //      //photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
+  //      //photonView.viewID = 1;
+  //      PhotonNetwork.automaticallySyncScene = true;
+  //      PhotonNetwork.BackgroundTimeout = 5.0f;
+		//Debug.Log("Connect ");
+        //Connect();
     }
 
     public override void Disable()
@@ -53,13 +53,13 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
         photonView.RPC(message, opponentPlayer, args);
     }
  
-    public override void OnGoToPLayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(PlayerProfile player)
     {
         if (PhotonNetwork.player != PhotonNetwork.masterClient)
         {
-            adapter.homeMenuManager.UpdatePrize(player.prize);
+//            adapter.homeMenuManager.UpdatePrize(player.prize);
 
-            Debug.LogWarning("SetPrize " + player.prize);
+//            Debug.LogWarning("SetPrize " + player.prize);
             NetworkManager.opponentPlayer = player;
             PhotonNetwork.JoinRoom(NetworkManager.PlayerToString(NetworkManager.opponentPlayer));
         }
@@ -101,7 +101,7 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
 
     void OnFailedToConnectToPhoton(object parameters)
     {
-        CallNetworkState(NetworkState.FiledToConnect);
+        CallNetworkState(NetworkState.FailedToConnect);
         Debug.LogWarning(state);
     }
 
@@ -123,7 +123,7 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
         }
     }
 
-    public override void Resset()
+    public override void Reset()
     {
         LeftRoom();
     }
@@ -229,13 +229,13 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
             RoomInfo room = rooms[i];
             if (room.PlayerCount < room.MaxPlayers)
             {
-                playersList.Add(NetworkManager.PlayerFromString(rooms[i].Name, ChackIsFriend));
+                playersList.Add(NetworkManager.PlayerFromString(rooms[i].Name, CheckIsFriend));
             }
         }
         players = playersList.ToArray();
     }
 
-    public override bool ChackIsFriend(string id)
+    public override bool CheckIsFriend(string id)
     {
         string[] friendsId = NetworkManager.social.GetFriendsId();
         if (friendsId != null)
@@ -252,23 +252,23 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
     }
 
     [PunRPC]
-    public override void OnOpponenReadToPlay(string playerData, bool is3DGraphicMode)
+    public override void OnOpponentReadyToPlay(string playerData)
     {
-        NetworkManager.opponentPlayer = NetworkManager.PlayerFromString(playerData, ChackIsFriend);
-        AightBallPoolNetworkGameAdapter.isSameGraphicsMode = AightBallPoolNetworkGameAdapter.is3DGraphics == is3DGraphicMode;
+        NetworkManager.opponentPlayer = NetworkManager.PlayerFromString(playerData, CheckIsFriend);
+
         Debug.Log("OnOpponenReadToPlay " + playerData);
-        CallNetworkState(NetworkState.OpponentReadToPlay);
+        CallNetworkState(NetworkState.OpponentReadyToPlay);
         if (PhotonNetwork.player != PhotonNetwork.masterClient)
         {
             int turnId = Random.Range(0, 2);
             int turnIdForSend = turnId == 1 ? 0 : 1;
-            OnOpponenStartToPlay(turnId);
+            OnOpponentStartToPlay(turnId);
             photonView.RPC("OnOpponenStartToPlay", opponentPlayer, turnIdForSend);
         }
     }
 
     [PunRPC]
-    public override void OnOpponenStartToPlay(int turnId)
+    public override void OnOpponentStartToPlay(int turnId)
     {
         Debug.Log(" OnOpponenStartToPlay " + turnId);
         adapter.SetTurn(turnId);
@@ -291,12 +291,12 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
         messenger.EndSimulate(ballsState);
     }
     [PunRPC]
-    public override void OnOpponenWaitingForYourTurn()
+    public override void OnOpponentWaitingForYourTurn()
     {
-        base.OnOpponenWaitingForYourTurn();
+        base.OnOpponentWaitingForYourTurn();
     }
     [PunRPC]
-    public override void OnOpponenInGameScene()
+    public override void OnOpponentInGameScene()
     {
         StartCoroutine(messenger.OnOpponenInGameScene());
     }

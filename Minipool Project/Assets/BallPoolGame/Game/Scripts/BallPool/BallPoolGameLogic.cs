@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace BallPool
 {
-    public enum PlayMode
+    public enum GamePlayMode
     {
         PlayerAI = 0,
         HotSeat,
-        OnLine,
+        Online,
         Replay
     }
     /// <summary>
@@ -42,7 +42,7 @@ namespace BallPool
         /// <summary>
         /// The play mode, (PlayerAI, HotSeat, OnLine or Replay).
         /// </summary>
-        public static PlayMode playMode;
+        public static GamePlayMode playMode;
 
         /// <summary>
         /// The game is online
@@ -51,7 +51,7 @@ namespace BallPool
         {
             get
             {
-                return playMode == PlayMode.OnLine && BallPoolGameLogic.instance != null;
+                return playMode == GamePlayMode.Online && BallPoolGameLogic.instance != null;
             }
         }
         /// <summary>
@@ -61,7 +61,7 @@ namespace BallPool
         {
             get
             {
-                return playMode == PlayMode.OnLine && !BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.instance != null;
+                return playMode == GamePlayMode.Online && !BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.instance != null;
             }
         }
         /// <summary>
@@ -71,7 +71,7 @@ namespace BallPool
         {
             get
             {
-                return playMode == PlayMode.OnLine && BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.instance != null;
+                return playMode == GamePlayMode.Online && BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.instance != null;
             }
         }
 

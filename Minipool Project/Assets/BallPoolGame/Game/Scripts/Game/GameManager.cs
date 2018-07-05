@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
 	public Ball[] balls;
 	private bool playAgainMenuIsActive;
-	private AightBallPoolGameManager aightBallPoolGameManager;
+    private AightBallPoolGameManager aightBallPoolGameManager;
 	private bool applicationIsPaused;
 	private int applicationPauseSeconds;
 
@@ -47,7 +47,7 @@ public class GameManager : MonoBehaviour
 		DataManager.SaveGameData();
 		UpdateAICount();
 
-		if (BallPoolGameLogic.playMode == BallPool.PlayMode.Replay)
+        if (BallPoolGameLogic.playMode == BallPool.GamePlayMode.Replay)
 		{
 			enabled = false;
 			shotController.enabled = false;
@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour
 		aightBallPoolGameManager.OnSetPlayer += AightBallPoolGameManager_OnSetPlayer;
 		aightBallPoolGameManager.OnSetAvatar += AightBallPoolGameManager_OnSetAvatar;
 		aightBallPoolGameManager.OnSetActivePlayer += AightBallPoolGameManager_OnSetActivePlayer;
-		aightBallPoolGameManager.OnGameComplite += AightBallPoolGameManager_OnGameComplite;
+		aightBallPoolGameManager.OnGameComplete += AightBallPoolGameManager_OnGameComplete;
 		aightBallPoolGameManager.OnSetActiveBallsIds += AightBallPoolGameManager_OnSetActiveBallsIds;
 		aightBallPoolGameManager.OnEnableControl += (bool value) =>
 		{
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
 		shotController.OnUnselectBall += ShotController_OnUnselectBall;
 		physicsManager.OnSaveEndStartReplay += PhysicsManager_OnSaveEndStartReplay;
 
-		if (BallPoolGameLogic.playMode != BallPool.PlayMode.Replay)
+        if (BallPoolGameLogic.playMode != BallPool.GamePlayMode.Replay)
 		{
 			BallPoolPlayer.UpdateCouns(true);
 			BallPoolPlayer.SaveCoins();
@@ -242,7 +242,7 @@ public class GameManager : MonoBehaviour
 	void NetworkManager_network_OnNetwork (NetworkState state)
 	{
 		Debug.Log("NetworkManager_network_OnNetwork " + state);
-		if (BallPoolGameLogic.playMode == BallPool.PlayMode.OnLine)
+        if (BallPoolGameLogic.playMode == BallPool.GamePlayMode.Online)
 		{
 			if (state != NetworkState.Connected)
 			{
@@ -434,7 +434,7 @@ public class GameManager : MonoBehaviour
 		}
 	}
 
-	void AightBallPoolGameManager_OnGameComplite ()
+	void AightBallPoolGameManager_OnGameComplete ()
 	{
 		shotController.enabled = false;
 		TriggerPlayAgainMenu(true);

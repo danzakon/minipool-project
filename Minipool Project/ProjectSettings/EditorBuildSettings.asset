@@ -6,12 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Minipool/Minipool Networking/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/All Scenes/Home.unity
     guid: 38b8bbb9c5c4e4a1484b23adfec2b0a1
   - enabled: 1
+    path: Assets/Minipool/Minipool Networking/Scenes/Main.unity
+    guid: b1c7a8396ac7f4a06b06863afa4a6661
+  - enabled: 1
+    path: Assets/Minipool/Scenes/Minipool_Gameplay.unity
+    guid: 3d79d5b653c4c4dc8b94fa4e5c39aaac
+  - enabled: 0
     path: Assets/All Scenes/AightBallPool.unity
     guid: 77e51571c065b49b6887419466bda987
   m_configObjects: {}

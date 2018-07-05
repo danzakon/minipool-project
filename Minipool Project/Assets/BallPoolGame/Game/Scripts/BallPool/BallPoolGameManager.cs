@@ -21,16 +21,16 @@ namespace BallPool
                     _playAgainMenu = PlayAgainMenu.FindObjectOfType<PlayAgainMenu>();
                 }
                 return _playAgainMenu;
-            }
+            } 
         }
         /// <summary>
         /// Occurs when enable control for current player.
         /// </summary>
         public event System.Action<bool> OnEnableControl;
         /// <summary>
-        /// Occurs when game is complite.
+        /// Occurs when game is complete.
         /// </summary>
-        public event System.Action OnGameComplite;
+        public event System.Action OnGameComplete;
         public event System.Action OnShotEnded;
         public event System.Action OnCalculateAI;
         /// <summary>
@@ -172,7 +172,7 @@ namespace BallPool
             get;
             private set;
         }
-        public bool gameIsComplite
+        public bool gameIsComplete
         {
             get;
             private set;
@@ -229,12 +229,12 @@ namespace BallPool
                 OnShotEnded();
             }
         }
-        protected void CallOnGameComplite()
+        protected void CallOnGameComplete()
         {
-            gameIsComplite = true;
-            if (OnGameComplite != null)
+            gameIsComplete = true;
+            if (OnGameComplete != null)
             {
-                OnGameComplite();
+                OnGameComplete();
             }
         }
         protected void CallOnSetPrize(int prize)
@@ -274,7 +274,7 @@ namespace BallPool
         }
         protected void CallOnUpdateTime(float deltaTime)
         {
-            if (!gameIsComplite && calculateTime)
+            if (!gameIsComplete && calculateTime)
             {
                 if (playTime < 1.0f)
                 {
@@ -322,7 +322,7 @@ namespace BallPool
         }
         public virtual void OnDisable()
         {
-            OnGameComplite = null;
+            OnGameComplete = null;
             OnShotEnded = null;
             OnCalculateAI = null;
             OnShotAI = null;

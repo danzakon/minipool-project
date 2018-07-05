@@ -64,11 +64,8 @@ namespace BallPool
         {
             AightBallPoolGameLogic.gameState.gameIsComplete = true;
             playAgainMenuIsActive = true;
-            CallOnGameComplite();
-            if ( !NetworkManager.mainPlayer.canPlayOffline || ( BallPoolGameLogic.isOnLine && !NetworkManager.mainPlayer.canPlayOnLine ) )
-            {
-                playAgainMenu.HidePlayAgainButton();
-            }
+            CallOnGameComplete();
+
         }
 
         private void UpdateActiveBalls()
@@ -102,7 +99,7 @@ namespace BallPool
                 {
                     BallPoolPlayer.ChangeTurn();
                 }
-                if (BallPoolGameLogic.playMode == PlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
+                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
                 {
                     CallOnCalculateAI();
                 }
@@ -175,12 +172,12 @@ namespace BallPool
         {
             if (!playAgainMenuIsActive)
             {
-                CallOnEnableControl(BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == PlayMode.HotSeat);
+                CallOnEnableControl(BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == GamePlayMode.HotSeat);
 
                 CallOnSetActivePlayer(AightBallPoolPlayer.mainPlayer, BallPoolPlayer.turnId == AightBallPoolPlayer.mainPlayer.playerId);
                 CallOnSetActivePlayer(AightBallPoolPlayer.otherPlayer, BallPoolPlayer.turnId == AightBallPoolPlayer.otherPlayer.playerId);
 
-                if (BallPoolGameLogic.playMode == PlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
+                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
                 {
                     CallOnCalculateAI();
                 }

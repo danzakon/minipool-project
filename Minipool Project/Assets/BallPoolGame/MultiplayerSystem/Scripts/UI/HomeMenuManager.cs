@@ -102,18 +102,14 @@ public class HomeMenuManager : MonoBehaviour
 //            AightBallPoolNetworkGameAdapter.is3DGraphics = false;
 //        }
 
-		DataManager.SetIntData ("Is3DGraphics", AightBallPoolNetworkGameAdapter.is3DGraphics ? 0 : 1);
-
             
         ProductsManagement productsManagement = ProductsManagement.FindObjectOfType<ProductsManagement>();
-        productsManagement.transform.Find("Products3D").gameObject.SetActive(AightBallPoolNetworkGameAdapter.is3DGraphics);
-        productsManagement.transform.Find("Products2D").gameObject.SetActive(!AightBallPoolNetworkGameAdapter.is3DGraphics);
 
 
         waitingOpponent.gameObject.SetActive(false);
         roomCreated = false;
        
-        networkGameAdapter = new AightBallPoolNetworkGameAdapter(this);
+//        networkGameAdapter = new MinipoolNetworkGameAdapter(this);
         NetworkManager.network.SetAdapter(networkGameAdapter);
         #region event
 
@@ -196,7 +192,7 @@ public class HomeMenuManager : MonoBehaviour
         {
             StartCoroutine(NetworkManager.LoadMainPlayer((Texture2D)mainPlayerUI.avatarImage.texture));
         }
-        NetworkManager.network.Resset();
+        NetworkManager.network.Reset();
         UpdatePlayersList();
         adsIsOpened = false;
 
@@ -278,7 +274,7 @@ public class HomeMenuManager : MonoBehaviour
     public void UpdatePrize(int prize)
     {
         networkGameAdapter.OnUpdatePrize(prize);
-        NetworkManager.mainPlayer.prize = prize;
+//        NetworkManager.mainPlayer.prize = prize;
         mainPlayerUI.SetPlayer(NetworkManager.mainPlayer);
     }
 
@@ -303,7 +299,7 @@ public class HomeMenuManager : MonoBehaviour
             StartCoroutine(NetworkManager.LoadMainPlayer((Texture2D)mainPlayerUI.avatarImage.texture));
             UpdatePlayersList();
         }
-        else if (state == NetworkState.OpponentReadToPlay)
+        else if (state == NetworkState.OpponentReadyToPlay)
         {
             CheckOpponentImageByName(NetworkManager.opponentPlayer);
             opponentUI.SetPlayer(NetworkManager.opponentPlayer);
@@ -337,7 +333,7 @@ public class HomeMenuManager : MonoBehaviour
 
     private void TriggerNetworkPanels(NetworkManagement.NetworkState state)
     {
-        if (state == NetworkState.OpponentReadToPlay)
+        if (state == NetworkState.OpponentReadyToPlay)
         {
             return;
         }
@@ -349,7 +345,7 @@ public class HomeMenuManager : MonoBehaviour
         }
         foreach (var item in networkPanels)
         {
-            item.gameObject.SetActive(!(state == NetworkState.Disconnected || state == NetworkState.FiledToConnect || state == NetworkState.LostConnection));
+            item.gameObject.SetActive(!(state == NetworkState.Disconnected || state == NetworkState.FailedToConnect || state == NetworkState.LostConnection));
         }
 
         if (state == NetworkState.JoinedToRoom || state == NetworkState.CreatedRoom)
@@ -374,11 +370,10 @@ public class HomeMenuManager : MonoBehaviour
     void RoomsListManager_OnSelecPlayerProfile(NetworkManagement.Room room)
     {
         PlayerProfile player = room.mainPlayer;
-        if (player.prize <= NetworkManager.mainPlayer.coins && player.state == PlayerState.Online)
-        {
+
             CheckOpponentImageByName(player);
             opponentUI.SetPlayer(player);
-        }
+
     }
 
     void NetworkManager_OnRandomPlayerLoaded(NetworkManagement.PlayerProfile player)
@@ -402,10 +397,10 @@ public class HomeMenuManager : MonoBehaviour
         }
         UpdatePrize(prize);
 
-        networkGameAdapter.OnMainPlayerLoaded(0, player.userName, player.coins, player.image, player.imageURL, player.prize);
+        networkGameAdapter.OnMainPlayerLoaded(0, player.userName, player.coins, player.image, player.imageURL);
         mainPlayerUI.SetPlayer(player);
         nameInput.text = player.userName;
-        prizeInput.text = player.prize + "";
+//        prizeInput.text = player.prize + "";
     }
 
     public void GoToReplay()
@@ -421,13 +416,13 @@ public class HomeMenuManager : MonoBehaviour
             InfoManager.Open("FirstTimePlayInFunMode", this, "GoToPlayWithAI");
             return;
         }
-        if (!NetworkManager.mainPlayer.canPlayOffline)
-        {
-            UpdatePrize(NetworkManager.mainPlayer.coins);
-        }
-        string opponentrName = "AI Player";
+        //if (!NetworkManager.mainPlayer.canPlayOffline)
+        //{
+        //    UpdatePrize(NetworkManager.mainPlayer.coins);
+        //}
+        string opponentrName = "penelope";
         Texture2D opponentImage = aiImage;
-        int opponentCoins = Random.Range(2 * NetworkManager.mainPlayer.prize, 10 * NetworkManager.mainPlayer.prize);
+        int opponentCoins = 10;
 
         if (opponentsAvatars != null && opponentsAvatars.Length > 0)
         {
@@ -450,10 +445,10 @@ public class HomeMenuManager : MonoBehaviour
             return;
         }
 
-        if (!NetworkManager.mainPlayer.canPlayOffline)
-        {
-            UpdatePrize(NetworkManager.mainPlayer.coins);
-        }
+        //if (!NetworkManager.mainPlayer.canPlayOffline)
+        //{
+        //    UpdatePrize(NetworkManager.mainPlayer.coins);
+        //}
         string opponentrName = "Other Player";
         Texture2D randomImage = opponentImage;
         int opponentCoins = NetworkManager.mainPlayer.coins;
@@ -484,14 +479,10 @@ public class HomeMenuManager : MonoBehaviour
             {
                 if (playerUI && playerUI.player != null)
                 {
-                    if (NetworkManager.mainPlayer.canPlayOnLine)
-                    {
-                        networkGameAdapter.OnGoToPLayWithPlayer(playerUI.player);
-                    }
-                    else
-                    {
-                        OfferAd();
-                    }
+                    
+                        networkGameAdapter.OnGoToPlayWithPlayer(playerUI.player);
+                    
+
                 }
             }
             else
@@ -567,8 +558,8 @@ public class HomeMenuManager : MonoBehaviour
                 if (result == AdsShowResult.Finished)
                 {
                     int coins = int.Parse(prize.text);
-                    NetworkManager.mainPlayer.prize = Mathf.Clamp(NetworkManager.mainPlayer.prize, NetworkManager.social.minOnLinePrize, NetworkManager.mainPlayer.prize);
-                    prizeInput.text = NetworkManager.mainPlayer.prize + "";
+//                    NetworkManager.mainPlayer.prize = Mathf.Clamp(NetworkManager.mainPlayer.prize, NetworkManager.social.minOnLinePrize, NetworkManager.mainPlayer.prize);
+//                    prizeInput.text = NetworkManager.mainPlayer.prize + "";
 
                     NetworkManager.mainPlayer.UpdateCoins(NetworkManager.mainPlayer.coins + coins);
                     mainPlayerUI.UpdateCoinsFromPlayer();
@@ -600,17 +591,17 @@ public class HomeMenuManager : MonoBehaviour
             }
             else
             {
-                if (NetworkManager.mainPlayer.canPlayOnLine)
-                {
-                    NetworkManager.mainPlayer.prize = Mathf.Clamp(NetworkManager.mainPlayer.prize, NetworkManager.social.minOnLinePrize, NetworkManager.mainPlayer.prize);
-                    prizeInput.text = NetworkManager.mainPlayer.prize + "";
+                //if (NetworkManager.mainPlayer.canPlayOnLine)
+                //{
+
+
                         
-                    NetworkManager.network.CreateRoom();
-                }
-                else
-                {
-                    OfferAd();
-                }
+                //    NetworkManager.network.CreateRoom();
+                //}
+                //else
+                //{
+                //    OfferAd();
+                //}
             }
         }
         else

@@ -143,7 +143,7 @@ namespace BallPool.Mechanics
                     listener.body.velocity = state.velocity;
                     listener.body.angularVelocity = state.angularVelocity;
                 }
-                if (BallPoolGameLogic.playMode == PlayMode.Replay)
+                if (BallPoolGameLogic.playMode == GamePlayMode.Replay)
                 {
                     OnState(BallState.SetState);
                 }
@@ -196,6 +196,8 @@ namespace BallPool.Mechanics
             }
             SetBallShadowAndBlickBlick();
         }
+
+
         public void SetBallShadowAndBlickBlick()
         {
             if (!AightBallPoolNetworkGameAdapter.is3DGraphics)
@@ -337,7 +339,7 @@ namespace BallPool.Mechanics
             switch (state)
             {
                 case BallState.SetState:
-                    if (BallPoolGameLogic.playMode != PlayMode.Replay)
+                    if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
                     {
                         hitShapeId = -2;
                         moveData = mechanicalStateData;
@@ -362,7 +364,7 @@ namespace BallPool.Mechanics
                         ballBlick.position = CalculateBallBlickPosition();
                     }
 //                    ballShadow.position = CalculateBallShadowPosition();
-                    if (NeedToSave() && BallPoolGameLogic.playMode != PlayMode.Replay)
+                    if (NeedToSave() && BallPoolGameLogic.playMode != GamePlayMode.Replay)
                     {
                         if (!inPocket)
                         {
@@ -376,7 +378,7 @@ namespace BallPool.Mechanics
                     break;
                 case BallState.EndMove:
                     
-                    if (BallPoolGameLogic.playMode != PlayMode.Replay)
+                    if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
                     {
                         if (!inPocket)
                         {
@@ -391,7 +393,7 @@ namespace BallPool.Mechanics
                     }
                     break;
 			case BallState.EnterInPocket:
-				if (BallPoolGameLogic.playMode != PlayMode.Replay) {
+                    if (BallPoolGameLogic.playMode != GamePlayMode.Replay) {
 					if (!BallPoolGameLogic.controlFromNetwork) {
 						inPocket = true;
 					}
@@ -425,7 +427,7 @@ namespace BallPool.Mechanics
                     ballShadow.gameObject.SetActive(!inPocket);
                     break;
                 case BallState.HitBall:
-                    if (BallPoolGameLogic.playMode != PlayMode.Replay)
+                    if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
                     {
                         if (savedTime != listener.physicsManager.moveTime)
                         {
@@ -449,7 +451,7 @@ namespace BallPool.Mechanics
                     }
                     break;
                 case BallState.HitBoard:
-                    if (BallPoolGameLogic.playMode != PlayMode.Replay)
+                    if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
                     {
                         if (savedTime != listener.physicsManager.moveTime)
                         {

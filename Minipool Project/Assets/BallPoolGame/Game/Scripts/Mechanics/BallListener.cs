@@ -9,7 +9,7 @@ namespace BallPool
     {
 		public int id;
 
-		public GameManager gameManager;
+        public dans_GameManager gameManager;
 
 		private Ball[] balls;
 		private Ball attachedBall;
@@ -49,7 +49,7 @@ namespace BallPool
 
         public void OnTriggerEnter(Collider other)
         {
-            if (BallPoolGameLogic.playMode == PlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
             {
                 return;
             }
@@ -76,7 +76,7 @@ namespace BallPool
 
         public void OnTriggerExit(Collider other)
         {
-            if (BallPoolGameLogic.playMode == PlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
             {
                 return;
             }
@@ -111,6 +111,7 @@ namespace BallPool
             radius = body.GetComponent<SphereCollider>().radius;
 			balls = gameManager.balls;
 			attachedBall = balls [id];
+            transform.position = attachedBall.transform.position;
             pocketId = -1;
             hitShapeId = -2;
             inMove = physicsManager.inMove;
@@ -121,14 +122,14 @@ namespace BallPool
 			if (!body.isKinematic && !body.IsSleeping () && physicsManager.inMove) {
 				physicsManager.CallBallMove (id, body.position, body.velocity, body.angularVelocity);
 			} else {
-				body.Sleep ();
+				//body.Sleep ();
 			}
             if (inMove != physicsManager.inMove)
             {
                 inMove = physicsManager.inMove;
                 if (!inMove && !body.isKinematic)
                 {
-                    body.Sleep();
+                    //body.Sleep();
                 }
             }
         }

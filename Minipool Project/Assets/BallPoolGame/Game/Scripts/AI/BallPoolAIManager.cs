@@ -5,6 +5,7 @@ using BallPool.Mechanics;
 using NetworkManagement;
 
 
+
 namespace BallPool.AI
 {
     public delegate bool FindBestTargetBallException<Int>(int ballId);
@@ -42,8 +43,8 @@ namespace BallPool.AI
         public event CalculateAIHandler<BallPoolAIManager> OnStartCalculateAI;
         public event CalculateAIHandler<BallPoolAIManager> OnEndCalculateAI;
 
-        [SerializeField] private ShotController shotController;
-        [SerializeField] private GameManager gameManager;
+        [SerializeField] private Minipool_ShotController shotController;
+        [SerializeField] private dans_GameManager gameManager;
         [SerializeField] private Transform pockets;
         private PocketListener[] targets;
 

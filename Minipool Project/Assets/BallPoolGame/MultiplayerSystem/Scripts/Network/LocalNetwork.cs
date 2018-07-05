@@ -5,7 +5,7 @@ using NetworkManagement;
 
 public class LocalNetwork : NetworkEngine
 {
-    public override void Inicialize()
+    public override void Initialize()
     {
 
     }
@@ -17,7 +17,7 @@ public class LocalNetwork : NetworkEngine
     {
         
     }
-    public override void OnGoToPLayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(PlayerProfile player)
     {
        
     }
@@ -43,7 +43,7 @@ public class LocalNetwork : NetworkEngine
     {
 
     }
-    public override void Resset()
+    public override void Reset()
     {
 
     }
@@ -56,15 +56,15 @@ public class LocalNetwork : NetworkEngine
 
     }
 
-    public override void OnOpponenReadToPlay(string playerData, bool is3DGraphicMode)
+    public override void OnOpponentReadyToPlay(string playerData)
     {
 
     }
-    public override void OnOpponenStartToPlay(int turnId)
+    public override void OnOpponentStartToPlay(int turnId)
     {
 
     }
-    public override void OnOpponenInGameScene()
+    public override void OnOpponentInGameScene()
     {
 
     }
@@ -80,7 +80,7 @@ public class LocalNetwork : NetworkEngine
     {
         players = null;
     }
-    public override bool ChackIsFriend(string id)
+    public override bool CheckIsFriend(string id)
     {
         return false;
     }

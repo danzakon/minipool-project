@@ -291,17 +291,17 @@ namespace BallPool
         }
         public static void SaveCoins()
         {
-            if (BallPoolGameLogic.playMode == PlayMode.OnLine)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Online)
             {
                 NetworkManager.mainPlayer.UpdateCoins(mainPlayer.coins);
             }
-            else if (BallPoolGameLogic.playMode == PlayMode.PlayerAI || BallPoolGameLogic.playMode == PlayMode.HotSeat)
+            else if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI || BallPoolGameLogic.playMode == GamePlayMode.HotSeat)
             {
                 foreach (BallPoolPlayer player in BallPoolPlayer.players)
                 {
                     if (player == mainPlayer)
                     {
-                        if (BallPoolGameLogic.playMode != PlayMode.HotSeat && BallPoolGameLogic.playMode != PlayMode.PlayerAI)
+                        if (BallPoolGameLogic.playMode != GamePlayMode.HotSeat && BallPoolGameLogic.playMode != GamePlayMode.PlayerAI)
                         {
                             NetworkManager.mainPlayer.UpdateCoins(mainPlayer.coins);
                         }

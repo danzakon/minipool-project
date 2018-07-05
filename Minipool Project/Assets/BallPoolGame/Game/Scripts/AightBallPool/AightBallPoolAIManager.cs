@@ -9,26 +9,26 @@ namespace BallPool.AI
     {
         public override bool FindException(int ballId)
         {
-            if (AightBallPoolGameLogic.isCueBall(ballId))
+            if (MinipoolGameLogic.isCueBall(ballId))
             {
                 return true;
             }
-            bool isBlackBall = AightBallPoolGameLogic.isBlackBall(ballId);
-            if (!AightBallPoolGameLogic.gameState.playersHasBallType && isBlackBall)
+            bool isBlackBall = MinipoolGameLogic.isBlackBall(ballId);
+            if (!MinipoolGameLogic.gameState.playersHasBallType && isBlackBall)
             {
                 return true;
             }
-            if (!AightBallPoolGameLogic.gameState.playersHasBallType && !isBlackBall)
+            if (!MinipoolGameLogic.gameState.playersHasBallType && !isBlackBall)
             {
                 return false;
             }
 
-            bool mainPlayerIsBlack = AightBallPoolPlayer.mainPlayer.isBlack;
-            bool otherPlayerIsBlack = AightBallPoolPlayer.otherPlayer.isBlack;
-            bool ballIsStripes = AightBallPoolGameLogic.isStripesBall(ballId);
-            bool ballIsSolids = AightBallPoolGameLogic.isSolidsBall(ballId);
+            bool mainPlayerIsBlack = MinipoolPlayer.mainPlayer.isBlack;
+            bool otherPlayerIsBlack = MinipoolPlayer.otherPlayer.isBlack;
+            bool ballIsStripes = MinipoolGameLogic.isStripesBall(ballId);
+            bool ballIsSolids = MinipoolGameLogic.isSolidsBall(ballId);
 
-            if (AightBallPoolPlayer.mainPlayer.myTurn)
+            if (MinipoolPlayer.mainPlayer.myTurn)
             {
                 if (mainPlayerIsBlack)
                 {
@@ -39,8 +39,8 @@ namespace BallPool.AI
                     return true;
                 }
 
-                bool mainPlayerIsStripes = AightBallPoolPlayer.mainPlayer.isStripes;
-                bool mainPlayerIsSolids = AightBallPoolPlayer.mainPlayer.isSolids;
+                bool mainPlayerIsStripes = MinipoolPlayer.mainPlayer.isStripes;
+                bool mainPlayerIsSolids = MinipoolPlayer.mainPlayer.isSolids;
                 if (ballIsStripes)
                 {
                     return !mainPlayerIsStripes;
@@ -50,7 +50,7 @@ namespace BallPool.AI
                     return !mainPlayerIsSolids;
                 }
             }
-            else if (AightBallPoolPlayer.otherPlayer.myTurn)
+            else if (MinipoolPlayer.otherPlayer.myTurn)
             {
                 if (otherPlayerIsBlack)
                 {
@@ -61,8 +61,8 @@ namespace BallPool.AI
                     return true;
                 }
 
-                bool otherPlayerIsStripes = AightBallPoolPlayer.otherPlayer.isStripes;
-                bool otherPlayerIsSolids = AightBallPoolPlayer.otherPlayer.isSolids;
+                bool otherPlayerIsStripes = MinipoolPlayer.otherPlayer.isStripes;
+                bool otherPlayerIsSolids = MinipoolPlayer.otherPlayer.isSolids;
 
                 if (ballIsStripes)
                 {

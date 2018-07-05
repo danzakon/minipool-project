@@ -55,7 +55,7 @@ namespace NetworkManagement
                 }
                 else
                 {
-                    DontDestroyOnLoad(gameObject);
+                    //DontDestroyOnLoad(gameObject);
                     instance = this;
                     productsGroup = new ProductsGroup[productsGroupTranform.Length];
                     for (int i = 0; i < productsGroupTranform.Length; i++)

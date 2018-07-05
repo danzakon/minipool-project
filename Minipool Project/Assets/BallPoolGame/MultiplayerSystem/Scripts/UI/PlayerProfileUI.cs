@@ -67,7 +67,6 @@ public class PlayerProfileUI : MonoBehaviour
     {
         if (player != null)
         {
-            prize.text = player.prize + "";
         }
     }
     public void SetPlayer(NetworkManagement.PlayerProfile player)
@@ -121,7 +120,6 @@ public class PlayerProfileUI : MonoBehaviour
         }
         userName.text = player.userName;
         coins.text = player.coins + "";
-        prize.text = player.prize + "";
         state.enabled = true;
         switch (player.state)
         {

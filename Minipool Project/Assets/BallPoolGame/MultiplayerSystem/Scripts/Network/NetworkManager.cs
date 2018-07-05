@@ -12,7 +12,7 @@ namespace NetworkManagement
     public delegate void LoadPlayersHandler(NetworkManagement.PlayerProfile[] players);
     public delegate void LoadPlayerHandler(NetworkManagement.PlayerProfile player);
     public delegate void SetPlayerHandler(NetworkManagement.PlayerProfile player);
-    public delegate bool ChackIsFriend(string id);
+    public delegate bool CheckIsFriend(string id);
 
     public enum LoginedState
     {
@@ -58,18 +58,13 @@ namespace NetworkManagement
     /// </summary>
     public class Room
     {
-        /// <summary>
-        /// This room unique identifier.
-        /// </summary>
+
         public int id
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Player prize for the match.
-        /// </summary>
         public int prize
         {
             get;
@@ -85,6 +80,7 @@ namespace NetworkManagement
             foreach (PlayerProfile player in players)
             {
                 player.roomId = id;
+                Debug.Log("Player " + id + "is in the house");
             }
         }
 
@@ -101,9 +97,7 @@ namespace NetworkManagement
         }
     }
 
-    /// <summary>
-    /// The Product type.
-    /// </summary>
+
     [System.Serializable]
     public class ProductType
     {
@@ -139,9 +133,6 @@ namespace NetworkManagement
         }
     }
 
-    /// <summary>
-    /// All product icons which is available by default.
-    /// </summary>
     [System.Serializable]
     public class DefaultProductProfile
     {
@@ -202,9 +193,7 @@ namespace NetworkManagement
         }
     }
 
-    /// <summary>
-    /// The player profile.
-    /// </summary>
+
     public class PlayerProfile
     {
         /// <summary>
@@ -216,76 +205,48 @@ namespace NetworkManagement
             private set;
         }
 
-        public bool canPlayOffline{ get { return coins >= prize && coins >= NetworkManager.social.minCoinsCount; } }
-
-        public bool canPlayOnLine{ get { return coins >= prize && coins >= NetworkManager.social.minOnLinePrize; } }
-
-        /// <summary>
-        /// The room id.
-        /// </summary>
         public int roomId
         {
             get;
             set;
         }
 
-        /// <summary>
-        ///  Is this user the main?
-        /// </summary>
         public bool isMain
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Avatar image of the user.
-        /// </summary>
         public Texture2D image
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Avatar image URL of the user.
-        /// </summary>
         public string imageURL
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Avatar image name of the user.
-        /// </summary>
         public string imageName
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Is this user a friend?
-        /// </summary>
         public bool isFriend
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// This user's username.
-        /// </summary>
         public string userName
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Player coins.
-        /// </summary>
         public int coins
         {
             get;
@@ -303,25 +264,11 @@ namespace NetworkManagement
             NetworkManager.social.SaveMainPlayerCoins(this.coins);
         }
 
-
-        /// <summary>
-        /// Player prize for the match.
-        /// </summary>
-        public int prize
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Presence state of the user.
-        /// </summary>
         public PlayerState state
         {
             get;
             set;
         }
-
 
         public PlayerProfile(string id, bool isMain, Texture2D image, string imageURL, string imageName, bool isFriend, string userName, PlayerState state, int coins, int prize)
         {
@@ -334,7 +281,6 @@ namespace NetworkManagement
             this.userName = userName;
             this.state = state;
             this.coins = coins;
-            this.prize = prize;
         }
 
         public void SetImage(Texture2D image)
@@ -355,9 +301,7 @@ namespace NetworkManagement
         }
     }
 
-    /// <summary>
-    /// All management of network, passes by using this class.
-    /// </summary>
+
     public class NetworkManager
     {
         public static bool initialized = false;
@@ -379,10 +323,6 @@ namespace NetworkManagement
         }
 
         private static NetworkEngine _network;
-
-        /// <summary>
-        /// The network API, who works with some network system.
-        /// </summary>
         public static NetworkEngine network
         {
             get
@@ -390,31 +330,27 @@ namespace NetworkManagement
                 if (!_network)
                 {
                     #if PUN
-                    _network = (new GameObject("Network")).AddComponent<PunNetwork>();
+                    _network = GameObject.Find("Dan's Network").GetComponent<dans_Network>();
+                        //(new GameObject("Network")).AddComponent<dans_Network>();
                     #elif Local
                     _network = (new GameObject("Network")).AddComponent<LocalNetwork>();
                     #else
                     _network = (new GameObject("Network")).AddComponent<NetworkExample>();
                     #endif
 
-                    _network.Inicialize();
+                    _network.Initialize();
                 }
                 return _network;
             }
         }
 
         private static SocialEngine _social;
-
-        /// <summary>
-        /// The social API, who works with some social platforms.
-        /// </summary>
         public static SocialEngine social
         {
             get
             {
                 if (_social == null)
                 {
-                    ///Implement SocialEngine Instance
                     _social = new SocialExample();
                 }
                 return _social;
@@ -422,10 +358,6 @@ namespace NetworkManagement
         }
 
         private static PurchasingEngine _purchasing;
-
-        /// <summary>
-        /// The IAP API, who works with some IAP platforms.
-        /// </summary>
         public static PurchasingEngine purchasing
         {
             get
@@ -443,34 +375,14 @@ namespace NetworkManagement
             }
         }
 
-        /// <summary>
-        /// Occurs when players loaded.
-        /// </summary>
+
         public static event LoadPlayersHandler OnPlayersLoaded;
-        /// <summary>
-        /// Occurs when one random opponent loaded.
-        /// </summary>
         public static event LoadPlayerHandler OnRandomPlayerLoaded;
-        /// <summary>
-        /// Occurs when friends and random players loaded.
-        /// </summary>
         public static event LoadPlayersHandler OnFriendsAndRandomPlayersLoaded;
-        /// <summary>
-        /// Occurs when main player loaded.
-        /// </summary>
         public static event LoadPlayerHandler OnMainPlayerLoaded;
-        /// <summary>
-        /// Occurs when concrete friend loaded by main player request.
-        /// </summary>
         public static event LoadPlayerHandler OnFriendLoaded;
-        /// <summary>
-        /// Occurs when some player initialized.
-        /// </summary>
         public static event SetPlayerHandler OnPlayerSet;
 
-        /// <summary>
-        /// Disable this instance.
-        /// </summary>
         public static void Disable()
         {
             OnPlayersLoaded = null;
@@ -491,50 +403,34 @@ namespace NetworkManagement
             }
         }
 
-        /// <summary>
-        /// Trying to Sign Up.
-        /// </summary>
+
         public static void SignUp(string email, string password)
         {
             social.SignUp(email, password);
         }
 
-        /// <summary>
-        /// Trying to login.
-        /// </summary>
         public static void Login(string email, string password)
         {
             social.Login(email, password);
         }
 
-        /// <summary>
-        /// Trying to login with Facebook.
-        /// </summary>
         public static void LoginWithFacebook()
         {
             social.LoginWithFacebok();
         }
 
-        /// <summary>
-        /// Trying to purchase this product.
-        /// </summary>
+
         public static void Purchase(int productCount, ProductProfile productProfile)
         {
             purchasing.Purchase(productCount, productProfile);
         }
 
-        /// <summary>
-        /// Gets the main player.
-        /// </summary>
         public static NetworkManagement.PlayerProfile mainPlayer
         {
             get;
             private set;
         }
 
-        /// <summary>
-        /// Gets or sets the opponent player, if there is one opponent player on the room.
-        /// </summary>
         public static NetworkManagement.PlayerProfile opponentPlayer
         {
             get;
@@ -542,10 +438,6 @@ namespace NetworkManagement
         }
 
         private static NetworkManagement.PlayerProfile[] _players;
-
-        /// <summary>
-        /// Gets the all loaded players.
-        /// </summary>
         public static NetworkManagement.PlayerProfile[] players
         {
             get
@@ -559,10 +451,6 @@ namespace NetworkManagement
         }
 
         private  static NetworkManagement.PlayerProfile[] _friends;
-
-        /// <summary>
-        /// Gets the all loaded friends.
-        /// </summary>
         public static NetworkManagement.PlayerProfile[] friends
         {
             get
@@ -583,10 +471,6 @@ namespace NetworkManagement
         }
 
         private  static NetworkManagement.PlayerProfile[] _notFriends;
-
-        /// <summary>
-        /// Gets the all loaded player who are not friends.
-        /// </summary>
         public static NetworkManagement.PlayerProfile[] notFriends
         {
             get
@@ -777,7 +661,7 @@ namespace NetworkManagement
             {
                 IEnumerable<NetworkManagement.PlayerProfile> randomPlayersEnum =
                     from player in players
-                                   where player.prize <= NetworkManager.mainPlayer.coins && player.state == PlayerState.Online
+                                   where player.state == PlayerState.Online
                                    select player;
 
                 NetworkManagement.PlayerProfile[] randomPlayers = randomPlayersEnum.ToArray();
@@ -827,7 +711,7 @@ namespace NetworkManagement
             }
             IEnumerable<NetworkManagement.PlayerProfile> playersEnum =
                 from player in detectedPlayers
-                            where (string.IsNullOrEmpty(userName) || player.userName.Contains(userName)) && (prize == 0 || player.prize <= prize) && (!isOnline || player.state == PlayerState.Online) && (!onlyFriends || player.isFriend == true)
+                            where (string.IsNullOrEmpty(userName) || player.userName.Contains(userName)) && (!isOnline || player.state == PlayerState.Online) && (!onlyFriends || player.isFriend == true)
                             select player;
 
             return playersEnum.ToArray();
@@ -883,7 +767,7 @@ namespace NetworkManagement
             get { return social.GetPrivacyPolicyURL(); }
         }
 
-        public static PlayerProfile PlayerFromString(string playerData, ChackIsFriend friendChecker)
+        public static PlayerProfile PlayerFromString(string playerData, CheckIsFriend friendChecker)
         {
             string str = "";
             int step = 0;
@@ -945,7 +829,7 @@ namespace NetworkManagement
             {
                 return "";
             }
-            return playerProfile.id + ";" + playerProfile.imageURL + ";" + playerProfile.imageName + ";" + playerProfile.userName + ";" + (int)playerProfile.state + ";" + playerProfile.coins + ";" + playerProfile.prize + ";";
+            return playerProfile.id + ";" + playerProfile.imageURL + ";" + playerProfile.imageName + ";" + playerProfile.userName + ";" + (int)playerProfile.state + ";" + playerProfile.coins + ";";
         }
     }
 }

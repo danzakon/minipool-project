@@ -153,7 +153,7 @@ namespace BallPool.Mechanics
                 listener.body.Sleep();
             }
             replayManager = new ReplayManager();
-            if (BallPoolGameLogic.playMode != PlayMode.Replay)
+            if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
             {
                 replayManager.DeleteReplayData();
             }
@@ -234,7 +234,7 @@ namespace BallPool.Mechanics
                 yield return new WaitForSeconds(0.2f);
                 NetworkManager.network.SendRemoteMessage("WaitAndStopMoveFromNetwork", moveTime);
             }
-            if (BallPoolGameLogic.playMode != PlayMode.Replay)
+            if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
             {
                 replayManager.AddReplayDataCount();
             }

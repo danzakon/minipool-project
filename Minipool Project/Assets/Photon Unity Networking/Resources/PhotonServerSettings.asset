@@ -59,4 +59,12 @@ MonoBehaviour:
   - SetMechanicalStatesFromNetwork
   - StartSimulate
   - WaitAndStopMoveFromNetwork
+  - RPC_CreatePlayer
+  - RPC_LoadedGameScene
+  - RPC_LoadGameOthers
+  - RPC_NewHealth
+  - OnOpponentInGameScene
+  - OnOpponentReadyToPlay
+  - OnOpponentStartToPlay
+  - OnOpponentWaitingForYourTurn
   DisableAutoOpenWizard: 1

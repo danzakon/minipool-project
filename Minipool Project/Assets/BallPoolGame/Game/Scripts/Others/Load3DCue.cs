@@ -25,7 +25,7 @@ public class Load3DCue : MonoBehaviour
 
     void Awake()
     {
-        if (!AightBallPoolNetworkGameAdapter.is3DGraphics || BallPoolGameLogic.playMode == BallPool.PlayMode.Replay)
+        if (!AightBallPoolNetworkGameAdapter.is3DGraphics || BallPoolGameLogic.playMode == BallPool.GamePlayMode.Replay)
         {
             enabled = false;
             return;

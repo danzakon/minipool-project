@@ -87,7 +87,7 @@ public class GameUIController : MonoBehaviour
     }
     void Start()
     {
-        if (BallPoolGameLogic.playMode == BallPool.PlayMode.Replay)
+        if (BallPoolGameLogic.playMode == BallPool.GamePlayMode.Replay)
         {
             replayNumber.options = new List<Dropdown.OptionData>(0);
             replayNumberValue = 0;
@@ -106,7 +106,7 @@ public class GameUIController : MonoBehaviour
     /// </summary>
     public void OnReplayNumberChanged()
     {
-        if (BallPoolGameLogic.playMode == BallPool.PlayMode.Replay)
+        if (BallPoolGameLogic.playMode == BallPool.GamePlayMode.Replay)
         {
             replayNumberValue = replayNumber.value;
             Debug.Log("replayNumber " + replayNumberValue);
@@ -138,7 +138,7 @@ public class GameUIController : MonoBehaviour
     /// </summary>
     public void ControlChanged()
     {
-        replayUI.gameObject.SetActive(BallPoolGameLogic.playMode == BallPool.PlayMode.Replay);
+        replayUI.gameObject.SetActive(BallPoolGameLogic.playMode == BallPool.GamePlayMode.Replay);
         gameUI.gameObject.SetActive(!replayUI.gameObject.activeSelf);
         OnReplayNumberChanged();
     }
@@ -206,7 +206,7 @@ public class GameUIController : MonoBehaviour
         Debug.LogWarning("opponenIsReadToPlay " +  gameManager.shotController.opponenIsReadToPlay);
         if(gameManager.shotController.opponenIsReadToPlay)
         {
-            if (BallPoolGameLogic.playMode == BallPool.PlayMode.OnLine)
+            if (BallPoolGameLogic.playMode == BallPool.GamePlayMode.Online)
             {
                 if (OnForceGoHome != null)
                 {

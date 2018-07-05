@@ -6,26 +6,20 @@ namespace NetworkManagement
 {
     public delegate void NetworkHandler(NetworkState state);
 
-    /// <summary>
-    /// The network current state.
-    /// </summary>
     public enum NetworkState
     {
         Disconnected = 0,
         Connected,
-        FiledToConnect,
+        FailedToConnect,
         LostConnection,
         CreatedRoom,
         JoinedToRoom,
         LeftRoom,
         RoomCreateFailed,
         JoinRoomFailed,
-        OpponentReadToPlay
+        OpponentReadyToPlay
     }
 
-    /// <summary>
-    /// The network API, who works with some network system.
-    /// </summary>
     public abstract class NetworkEngine : MonoBehaviour
     {
         public event NetworkHandler OnNetwork;
@@ -34,15 +28,11 @@ namespace NetworkManagement
 
         public int sendRate { get; protected set; }
 
-        public bool opponenWaitingForYourTurn { get; protected set; }
+        public bool opponentWaitingForYourTurn { get; protected set; }
 
-
-        /// <summary>
-        /// Sends the remote message to opponent.
-        /// </summary>
         public abstract void SendRemoteMessage(string message, params object[] args);
 
-        public abstract void OnGoToPLayWithPlayer(PlayerProfile player);
+        public abstract void OnGoToPlayWithPlayer(PlayerProfile player);
 
 
         public void SetAdapter(NetworkGameAdapter adapter)
@@ -59,14 +49,14 @@ namespace NetworkManagement
             }
         }
 
-        public virtual void Inicialize()
+        public virtual void Initialize()
         {
-            opponenWaitingForYourTurn = false;
+            opponentWaitingForYourTurn = false;
         }
 
         protected virtual void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
             state = NetworkState.Disconnected;
         }
 
@@ -95,7 +85,7 @@ namespace NetworkManagement
             while (true)
             {
                 yield return new WaitForSeconds(3.0f);
-                if ((state == NetworkState.Disconnected || state == NetworkState.FiledToConnect || state == NetworkState.LostConnection))
+                if ((state == NetworkState.Disconnected || state == NetworkState.FailedToConnect || state == NetworkState.LostConnection))
                 {
                     if (reachable)
                     {
@@ -117,11 +107,11 @@ namespace NetworkManagement
             private set;
         }
 
-        public abstract void Resset();
+        public abstract void Reset();
 
         public abstract void Disconnect();
 
-        public abstract bool ChackIsFriend(string id);
+        public abstract bool CheckIsFriend(string id);
 
         public abstract void CreateRoom();
 
@@ -129,27 +119,27 @@ namespace NetworkManagement
 
         public abstract void Connect();
 
-        public abstract void OnOpponenReadToPlay(string playerData, bool is3DGraphicMode);
+        public abstract void OnOpponentReadyToPlay(string playerData);
 
-        public abstract void OnOpponenStartToPlay(int turnId);
+        public abstract void OnOpponentStartToPlay(int turnId);
 
         public abstract void OnSendTime(float time01);
 
         public void OnMadeTurn()
         {
-            opponenWaitingForYourTurn = false;
+            opponentWaitingForYourTurn = false;
         }
 
         public abstract void StartSimulate(string ballsState);
 
         public abstract void EndSimulate(string ballsState);
 
-        public virtual void OnOpponenWaitingForYourTurn()
+        public virtual void OnOpponentWaitingForYourTurn()
         {
-            opponenWaitingForYourTurn = true;
+            opponentWaitingForYourTurn = true;
         }
 
-        public abstract void OnOpponenInGameScene();
+        public abstract void OnOpponentInGameScene();
         public abstract void OnOpponentForceGoHome();
         public abstract void StartUpdatePlayers();
 

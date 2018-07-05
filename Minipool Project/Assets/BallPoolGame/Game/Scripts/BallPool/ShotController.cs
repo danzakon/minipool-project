@@ -334,7 +334,7 @@ namespace BallPool
 						Debug.Log ("Shooting from checkpoint 4");
                         StartCoroutine("WaitAndStartShot");
                     }
-                    else if ((enabled || BallPoolGameLogic.playMode == PlayMode.PlayerAI) && !physicsManager.inMove)
+                else if ((enabled || BallPoolGameLogic.playMode == GamePlayMode.PlayerAI) && !physicsManager.inMove)
                     {
                         force = Mathf.Clamp01(-cueSliderDisplacementZ / cueSlidingMaxDisplacement);
                         cueStateType = CueStateType.Non;
@@ -350,7 +350,7 @@ namespace BallPool
                     }
                 };
             
-            if (BallPoolGameLogic.playMode == PlayMode.Replay)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Replay)
             {
                 physicsManager.OnStartShot += Replay_PhysicsManager_OnStartShot;
                 physicsManager.OnEndShot += Replay_PhysicsManager_OnEndShot;
@@ -577,7 +577,7 @@ namespace BallPool
             if (BallPoolGameLogic.isOnLine)
             {
                 float waitingTime = 0.0f;
-                while (!NetworkManager.network.opponenWaitingForYourTurn)
+                while (!NetworkManager.network.opponentWaitingForYourTurn)
                 {
                     yield return new WaitForEndOfFrame();
                     waitingTime += Time.deltaTime;
@@ -589,7 +589,7 @@ namespace BallPool
                 waitingOpponent.enabled = false;
 				//cameraMode = CameraMode.Standard;
             }
-            if (!enabled && !BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode != PlayMode.HotSeat && BallPoolGameLogic.playMode != PlayMode.Replay)
+            if (!enabled && !BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode != GamePlayMode.HotSeat && BallPoolGameLogic.playMode != GamePlayMode.Replay)
             {
                 shotBack.enabled = true;
 				//cameraMode = CameraMode.Standard;
@@ -661,7 +661,7 @@ namespace BallPool
 
         public void DecreaseAICount()
         {
-            if (useAI && BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode == PlayMode.OnLine)
+            if (useAI && BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode == GamePlayMode.Online)
             {
                 Debug.LogWarning("DecreaseAICount");
                 ProductAI.aiCount--;
@@ -673,7 +673,7 @@ namespace BallPool
 
         public IEnumerator WaitAndStartShot()
         {
-            if (BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode != PlayMode.HotSeat)
+            if (BallPoolPlayer.mainPlayer.myTurn && BallPoolGameLogic.playMode != GamePlayMode.HotSeat)
             {
                 ProductLines.OnShot(ref lineLength);
             }
@@ -701,7 +701,7 @@ namespace BallPool
 
             yield return new WaitForSeconds(3.0f * Time.fixedDeltaTime);
             Impulse impulse = new Impulse();
-            if (BallPoolGameLogic.playMode == PlayMode.Replay)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Replay)
             {
                 impulse =  physicsManager.replayManager.GetImpulse(uiController.replayNumberValue);
                 //Debug.Log("set impulse " + impulse.impulse);
@@ -737,7 +737,7 @@ namespace BallPool
             }
             physicsManager.StartShot(cueBall.listener);
 
-            if (BallPoolGameLogic.playMode == PlayMode.Replay)
+            if (BallPoolGameLogic.playMode == GamePlayMode.Replay)
             {
                 foreach (var ball in gameManager.balls) 
                 {
@@ -809,7 +809,7 @@ namespace BallPool
             {
                 OnEndCalculateAI();
             }
-            if (BallPoolGameLogic.playMode != PlayMode.PlayerAI || BallPoolPlayer.mainPlayer.myTurn)
+            if (BallPoolGameLogic.playMode != GamePlayMode.PlayerAI || BallPoolPlayer.mainPlayer.myTurn)
             {
                 if (uiController.shotOnUp)
                 {
@@ -875,7 +875,7 @@ namespace BallPool
             activateAfterCalculateAI = false;
             ballPosition = cueBall.position;
             smoothBallPosition = ballPosition;
-            enabled = BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == PlayMode.HotSeat;
+            enabled = BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == GamePlayMode.HotSeat;
 
 
             if (cueBall.firstHitInfo.shapeType != ShapeType.Non)

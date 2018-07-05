@@ -8,7 +8,7 @@ public class NetworkExample : NetworkEngine
     [SerializeField] private NetworkState oldState;
     [SerializeField] private float time;
 
-    public override void Inicialize()
+    public override void Initialize()
     {
 
     }
@@ -22,7 +22,7 @@ public class NetworkExample : NetworkEngine
         //        System.Reflection.MethodInfo methodInfo = messenger.GetType().GetMethod(message);
         //        methodInfo.Invoke(messenger, args);
     }
-    public override void OnGoToPLayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(PlayerProfile player)
     {
         Debug.LogWarning("OnGoToPLayWithPlayer " + player);
         adapter.SetTurn(Random.Range(0, 2));
@@ -56,7 +56,7 @@ public class NetworkExample : NetworkEngine
     {
 
     }
-    public override void Resset()
+    public override void Reset()
     {
 
     }
@@ -69,15 +69,15 @@ public class NetworkExample : NetworkEngine
 
     }
 
-    public override void OnOpponenReadToPlay(string playerData, bool is3DGraphicMode)
+    public override void OnOpponentReadyToPlay(string playerData)
     {
 
     }
-    public override void OnOpponenStartToPlay(int turnId)
+    public override void OnOpponentStartToPlay(int turnId)
     {
 
     }
-    public override void OnOpponenInGameScene()
+    public override void OnOpponentInGameScene()
     {
 
     }
@@ -111,7 +111,7 @@ public class NetworkExample : NetworkEngine
         }
 
     }
-    public override bool ChackIsFriend(string id)
+    public override bool CheckIsFriend(string id)
     {
         return false;
     }

@@ -22,7 +22,7 @@ namespace NetworkManagement
             else
             {
                 instance = this;
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
             }
         }
         void OnDisable()

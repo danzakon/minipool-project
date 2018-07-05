@@ -47,7 +47,7 @@ namespace NetworkManagement
             }
             else
             {
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
                 instance = this;
             }
             #endif
