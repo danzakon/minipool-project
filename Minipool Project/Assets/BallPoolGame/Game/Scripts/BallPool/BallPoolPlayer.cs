@@ -85,26 +85,15 @@ namespace BallPool
         {
             foreach (BallPoolPlayer player in players)
             {
-                if (startGame)
-                {
-                    player.coins -= BallPoolPlayer.prize;
-                }
-                else if (player.isWinner)
-                {
-                    player.coins += 2 * BallPoolPlayer.prize;
-                }
+
                 player.coins = Mathf.Clamp(player.coins, NetworkManager.social.minCoinsCount, player.coins);
             }
         }
-        public static void SetMainPlayerWinnerCouns()
+        public static void SetMainPlayerWinnerCoins()
         {
-            ReturnMainPlayerCouns();
-            ReturnMainPlayerCouns();
+
         }
-        public static void ReturnMainPlayerCouns()
-        {
-            BallPoolPlayer.mainPlayer.coins += BallPoolPlayer.prize;
-        }
+
         /// <summary>
         /// Maybe Avatar texture
         /// </summary>
@@ -155,34 +144,7 @@ namespace BallPool
             private set;
         }
 
-        public static int prize
-        {
-            get
-            {
-                if(players == null || players.Length == 0)
-                {
-                    return 20;
-                }
-                int prize = players[0].GetPrize();
-                if (prize == 0)
-                {
-                    prize = 20;
-                }
-                return prize;
-            }
-            set
-            {
-                if (players != null && players.Length != 0)
-                {
 
-                    int prize = value;
-                    if (prize >= 0)
-                    {
-                        players[0].SavePrize(prize);
-                    }
-                }
-            }
-        }
         public static void Deactivate()
         {
             OnPlayerInitialized = null;
@@ -318,15 +280,6 @@ namespace BallPool
             }
         }
 
-        protected virtual void SavePrize(int prize)
-        {
-            NetworkManager.social.SaveMainPlayerPrize(prize);
-        }
-
-        protected virtual int GetPrize()
-        {
-            return  NetworkManager.social.GetMainPlayerPrize();
-        }
 
         public IEnumerator DownloadAvatar()
         {

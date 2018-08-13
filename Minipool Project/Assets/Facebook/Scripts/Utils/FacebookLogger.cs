@@ -102,7 +102,7 @@ namespace Facebook.Unity
 
             public void Info(string msg)
             {
-                Debug.Log(msg);
+//                Debug.Log(msg);
                 this.logger.Info(msg);
             }
 

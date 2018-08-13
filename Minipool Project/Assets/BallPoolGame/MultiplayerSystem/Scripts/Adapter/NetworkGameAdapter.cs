@@ -12,10 +12,9 @@ public interface NetworkGameAdapter
     void SetTurn(int turnId);
     void OnMainPlayerLoaded (int playerId, string name, int coins, object avatar, string avatarURL);
 	void OnUpdateMainPlayerName (string name);
-	void OnUpdatePrize (int prize);
     void GoToReplay();
     void GoToReplayFromSharedData();
 	void OnGoToPlayWithAI (int playerId, string name, int coins, object avatar, string avatarURL);
 	void OnGoToPlayHotSeatMode (int playerId, string name, int coins, object avatar, string avatarURL);
-    void OnGoToPlayWithPlayer (PlayerProfile player);
+    void OnGoToPlayWithPlayer (NetworkManagement.PlayerProfile player);
 }

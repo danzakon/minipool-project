@@ -97,7 +97,7 @@ namespace BallPool
 
         public PhysicsManager physicsManager;
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private AightBallPoolAIManager aiManager;
+//        [SerializeField] private AightBallPoolAIManager aiManager;
         [SerializeField] private GameUIController uiController;
         private AudioSource cueHitBall;
         [SerializeField] private AudioClip hitBallClip;
@@ -384,15 +384,15 @@ namespace BallPool
             physicsManager.OnStartShot += PhysicsManager_OnStartShot;
             physicsManager.OnBallExitFromPocket += PhysicsManager_OnBallExitFromPocket;
 
-            aiManager.OnStartCalculateAI += AIManager_OnStartCalculateAI;
-            aiManager.OnEndCalculateAI += AIManager_OnEndCalculateAI;
+  //          aiManager.OnStartCalculateAI += AIManager_OnStartCalculateAI;
+  //          aiManager.OnEndCalculateAI += AIManager_OnEndCalculateAI;
 
             cueHitBall = gameObject.AddComponent<AudioSource>();
             cueHitBall.playOnAwake = false;
 
             BallPoolGameManager.instance.OnShotEnded += BallPoolGameManager_instance_OnShotEnded;
 
-            if (BallPoolGameLogic.isOnLine)
+            if (BallPoolGameLogic.isOnline)
             {
                 physicsManager.OnSaveEndStartReplay += PhysicsManager_OnSaveEndStartReplay;
             }
@@ -498,7 +498,7 @@ namespace BallPool
             }
             StartCoroutine(SetControl());
 
-            if (BallPoolGameLogic.isOnLine && AightBallPoolNetworkGameAdapter.isSameGraphicsMode)
+            if (BallPoolGameLogic.isOnline && AightBallPoolNetworkGameAdapter.isSameGraphicsMode)
             {
                 if (AightBallPoolNetworkGameAdapter.is3DGraphics)
                 {
@@ -574,7 +574,7 @@ namespace BallPool
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
 
-            if (BallPoolGameLogic.isOnLine)
+            if (BallPoolGameLogic.isOnline)
             {
                 float waitingTime = 0.0f;
                 while (!NetworkManager.network.opponentWaitingForYourTurn)
@@ -617,8 +617,8 @@ namespace BallPool
             physicsManager.OnStartShot -= Replay_PhysicsManager_OnStartShot;
             physicsManager.OnEndShot -= Replay_PhysicsManager_OnEndShot;
 
-            aiManager.OnStartCalculateAI -= AIManager_OnStartCalculateAI;
-            aiManager.OnEndCalculateAI -= AIManager_OnEndCalculateAI;
+   //         aiManager.OnStartCalculateAI -= AIManager_OnStartCalculateAI;
+   //         aiManager.OnEndCalculateAI -= AIManager_OnEndCalculateAI;
         }
 
 
@@ -643,7 +643,7 @@ namespace BallPool
             cueSlider.localPosition = new Vector3(0.0f, 0.0f, cueSliderDisplacementZ);
             savedCueSliderLocalPosition = cueSlider.localPosition;
             force = Mathf.Clamp01(-cueSliderDisplacementZ / cueSlidingMaxDisplacement);
-            aiManager.CancelCalculateAI();
+  //          aiManager.CancelCalculateAI();
         }
 
 
@@ -771,80 +771,80 @@ namespace BallPool
         }
 
 
-        void AIManager_OnEndCalculateAI(BallPoolAIManager aiManager)
-        {
-            if (aiManager.haveExaption)
-            {
-                Debug.LogWarning("haveExaption");
-            }
+     //   void AIManager_OnEndCalculateAI(BallPoolAIManager aiManager)
+     //   {
+     //       if (aiManager.haveExaption)
+     //       {
+     //           Debug.LogWarning("haveExaption");
+     //       }
 
-            cueBall.position = aiManager.info.shotBallPosition;
-            cueBall.OnState(BallState.SetState);
+     //       cueBall.position = aiManager.info.shotBallPosition;
+     //       cueBall.OnState(BallState.SetState);
 
-            ballChecker.position = aiManager.info.aimpoint;
-            ballChecker.gameObject.SetActive(true);
-            shotPoint = aiManager.info.shotPoint;
-            Vector3 impulseVector = aiManager.info.impulse * (aiManager.info.aimpoint - aiManager.info.shotBallPosition).normalized;
-            cuePivot.position = aiManager.info.shotBallPosition;
-            cuePivot.LookAt( cuePivot.position + Vector3.ProjectOnPlane(impulseVector.normalized, Vector3.up ));
-            cueSlider.forward = impulseVector.normalized;
-            cueDisplacement.position = shotPoint;
-            float displacement = (aiManager.info.impulse / physicsManager.ballMaxVelocity) * cueSlidingMaxDisplacement;
-            cueSliderDisplacementZ = -displacement;
+     //       ballChecker.position = aiManager.info.aimpoint;
+     //       ballChecker.gameObject.SetActive(true);
+     //       shotPoint = aiManager.info.shotPoint;
+     //       Vector3 impulseVector = aiManager.info.impulse * (aiManager.info.aimpoint - aiManager.info.shotBallPosition).normalized;
+     //       cuePivot.position = aiManager.info.shotBallPosition;
+     //       cuePivot.LookAt( cuePivot.position + Vector3.ProjectOnPlane(impulseVector.normalized, Vector3.up ));
+     //       cueSlider.forward = impulseVector.normalized;
+     //       cueDisplacement.position = shotPoint;
+     //       float displacement = (aiManager.info.impulse / physicsManager.ballMaxVelocity) * cueSlidingMaxDisplacement;
+     //       cueSliderDisplacementZ = -displacement;
            
-            cueSlider.localPosition = new Vector3(0.0f, 0.0f, -displacement);
-            RessetChanged();
-            TryCalculateShot(true);
-            Impulse impulse = new Impulse(shotPoint, force * (maxVelocity * cueBall.listener.body.mass) * cueSlider.forward);
-            physicsManager.SetImpulse(impulse);
+     //       cueSlider.localPosition = new Vector3(0.0f, 0.0f, -displacement);
+     //       RessetChanged();
+     //       TryCalculateShot(true);
+     //       Impulse impulse = new Impulse(shotPoint, force * (maxVelocity * cueBall.listener.body.mass) * cueSlider.forward);
+     //       physicsManager.SetImpulse(impulse);
 
-            if (BallPoolGameLogic.controlInNetwork)
-            {
-                NetworkManager.network.SendRemoteMessage("SetBallPosition", cueBall.position);
-                NetworkManager.network.SendRemoteMessage("OnForceSendCueControl", cuePivot.localRotation.eulerAngles.y, cueVertical.localRotation.eulerAngles.x, 
-                    new Vector2(cueDisplacement.localPosition.x, cueDisplacement.localPosition.y), cueSlider.localPosition.z, force);
+     //       if (BallPoolGameLogic.controlInNetwork)
+     //       {
+     //           NetworkManager.network.SendRemoteMessage("SetBallPosition", cueBall.position);
+     //           NetworkManager.network.SendRemoteMessage("OnForceSendCueControl", cuePivot.localRotation.eulerAngles.y, cueVertical.localRotation.eulerAngles.x, 
+     //               new Vector2(cueDisplacement.localPosition.x, cueDisplacement.localPosition.y), cueSlider.localPosition.z, force);
 
-            }
-            if (OnEndCalculateAI != null)
-            {
-                OnEndCalculateAI();
-            }
-            if (BallPoolGameLogic.playMode != GamePlayMode.PlayerAI || BallPoolPlayer.mainPlayer.myTurn)
-            {
-                if (uiController.shotOnUp)
-                {
-                    //Debug.Log("StartShot ");
-                    inMove = true;
-                    enabled = false;
-                    shotBack.enabled = true;
-                    inShot = true;
-                    shotFromAI = false;
+     //       }
+     //       if (OnEndCalculateAI != null)
+     //       {
+     //           OnEndCalculateAI();
+     //       }
+     //       if (BallPoolGameLogic.playMode != GamePlayMode.PlayerAI || BallPoolPlayer.mainPlayer.myTurn)
+     //       {
+     //           if (uiController.shotOnUp)
+     //           {
+     //               //Debug.Log("StartShot ");
+     //               inMove = true;
+     //               enabled = false;
+     //               shotBack.enabled = true;
+     //               inShot = true;
+     //               shotFromAI = false;
 
-					Debug.Log ("Shooting from checkpoint 1");
-                    StartCoroutine("WaitAndStartShot");
-                }
-                else
-                {
-                    //Debug.Log("Activate ");
-                    enabled = true;
-                    shotBack.enabled = false;
-                    activateAfterCalculateAI = true;
-                }
-            }
-        }
+					//Debug.Log ("Shooting from checkpoint 1");
+        //            StartCoroutine("WaitAndStartShot");
+        //        }
+        //        else
+        //        {
+        //            //Debug.Log("Activate ");
+        //            enabled = true;
+        //            shotBack.enabled = false;
+        //            activateAfterCalculateAI = true;
+        //        }
+        //    }
+        //}
 
        
-        void AIManager_OnStartCalculateAI(BallPoolAIManager AIManager)
-        {
-            useAI = true;
-            shotFromAI = true;
-            enabled = false;
-            activateAfterCalculateAI = false;
-			cueVertical.parent = cuePivot;
-			cueVertical.localPosition = Vector3.zero;
-			cueVertical.localRotation = cueVerticalStartRotation;
-            ballChecker.gameObject.SetActive(false);
-        }
+   //     void AIManager_OnStartCalculateAI(BallPoolAIManager AIManager)
+   //     {
+   //         useAI = true;
+   //         shotFromAI = true;
+   //         enabled = false;
+   //         activateAfterCalculateAI = false;
+			//cueVertical.parent = cuePivot;
+			//cueVertical.localPosition = Vector3.zero;
+			//cueVertical.localRotation = cueVerticalStartRotation;
+        //    ballChecker.gameObject.SetActive(false);
+        //}
 
 
         void PhysicsManager_OnSetState()
@@ -940,7 +940,7 @@ namespace BallPool
 			//cameraMode = CameraMode.Standard;
 
             //TryCalculateShot(true);
-            if (BallPoolGameLogic.isOnLine)
+            if (BallPoolGameLogic.isOnline)
             {
                 NetworkManager.network.SendRemoteMessage("OnOpponenWaitingForYourTurn");
             }
@@ -1201,10 +1201,10 @@ namespace BallPool
                         Vector3 positionInHit = targetShapelHit.point + cueBallRadius * targetShapelHit.normal;
                         ballChecker.position = positionInHit;
 
-                        if (aiManager.FindException(listener.id))
-                        {
-                            ballCheckerColor = Color.red;
-                        }
+                        //if (aiManager.FindException(listener.id))
+                        //{
+                        //    ballCheckerColor = Color.red;
+                        //}
 
                         cueBallSimpleLine.positionCount = 3;
                         cueBallSimpleLine.SetPosition(0, cueBall.position);

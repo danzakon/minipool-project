@@ -24,7 +24,7 @@ namespace BallPool
 
             BallPoolPlayer.OnTurnChanged += Player_OnTurnChanged;
 
-            if (!BallPoolGameLogic.isOnLine)
+            if (!BallPoolGameLogic.isOnline)
             {
                 BallPoolPlayer.turnId = (new Random()).Next(0, 2);
                 ;
@@ -32,14 +32,14 @@ namespace BallPool
 
             BallPoolPlayer.SetTurn(BallPoolPlayer.turnId);
 
-            CallOnSetPrize(BallPoolPlayer.prize);
+
             UpdateActiveBalls();
 
-            CallOnSetPlayer(AightBallPoolPlayer.mainPlayer);
-            CallOnSetPlayer(AightBallPoolPlayer.otherPlayer);
+            CallOnSetPlayer(MinipoolPlayer.mainPlayer);
+            CallOnSetPlayer(MinipoolPlayer.otherPlayer);
 
-            CallOnSetAvatar(AightBallPoolPlayer.mainPlayer);
-            CallOnSetAvatar(AightBallPoolPlayer.otherPlayer);
+            CallOnSetAvatar(MinipoolPlayer.mainPlayer);
+            CallOnSetAvatar(MinipoolPlayer.otherPlayer);
 
         }
 
@@ -70,11 +70,11 @@ namespace BallPool
 
         private void UpdateActiveBalls()
         {
-            AightBallPoolPlayer.mainPlayer.SetActiveBalls(balls);
-            AightBallPoolPlayer.otherPlayer.SetActiveBalls(balls);
+            MinipoolPlayer.mainPlayer.SetActiveBalls(balls);
+            MinipoolPlayer.otherPlayer.SetActiveBalls(balls);
 
-            CallOnSetActiveBallsIds(AightBallPoolPlayer.mainPlayer);
-            CallOnSetActiveBallsIds(AightBallPoolPlayer.otherPlayer);
+            CallOnSetActiveBallsIds(MinipoolPlayer.mainPlayer);
+            CallOnSetActiveBallsIds(MinipoolPlayer.otherPlayer);
         }
 
         public override void OnStartShot(string data)
@@ -99,7 +99,7 @@ namespace BallPool
                 {
                     BallPoolPlayer.ChangeTurn();
                 }
-                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
+                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && MinipoolPlayer.otherPlayer.myTurn)
                 {
                     CallOnCalculateAI();
                 }
@@ -174,10 +174,10 @@ namespace BallPool
             {
                 CallOnEnableControl(BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == GamePlayMode.HotSeat);
 
-                CallOnSetActivePlayer(AightBallPoolPlayer.mainPlayer, BallPoolPlayer.turnId == AightBallPoolPlayer.mainPlayer.playerId);
-                CallOnSetActivePlayer(AightBallPoolPlayer.otherPlayer, BallPoolPlayer.turnId == AightBallPoolPlayer.otherPlayer.playerId);
+                CallOnSetActivePlayer(MinipoolPlayer.mainPlayer, BallPoolPlayer.turnId == MinipoolPlayer.mainPlayer.playerId);
+                CallOnSetActivePlayer(MinipoolPlayer.otherPlayer, BallPoolPlayer.turnId == MinipoolPlayer.otherPlayer.playerId);
 
-                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && AightBallPoolPlayer.otherPlayer.myTurn)
+                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && MinipoolPlayer.otherPlayer.myTurn)
                 {
                     CallOnCalculateAI();
                 }

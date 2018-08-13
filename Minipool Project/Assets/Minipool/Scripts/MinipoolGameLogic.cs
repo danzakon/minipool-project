@@ -1,10 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using BallPool.Mechanics;
 
 namespace BallPool
 {
-    public class AightBallPoolGameState : GameState
+    public class MinipoolGameState : GameState
     {
         /// <summary>
         /// The table will close after first shot.
@@ -39,7 +39,7 @@ namespace BallPool
         /// </summary>
         public bool cueBallInPocket = false;
 
-        public AightBallPoolGameState()
+        public MinipoolGameState()
             : base()
         {
             tableIsOpened = true;
@@ -53,17 +53,17 @@ namespace BallPool
         }
     }
 
-    public class AightBallPoolGameLogic : BallPoolGameLogic
+    public class MinipoolGameLogic : BallPoolGameLogic
     {
-        private static AightBallPoolGameState _gameState;
+        private static MinipoolGameState _gameState;
 
-        public static AightBallPoolGameState gameState
+        public static MinipoolGameState gameState
         {
             get
             {
                 if (_gameState == null)
                 {
-                    _gameState = new AightBallPoolGameState();
+                    _gameState = new MinipoolGameState();
                 }
                 return _gameState;
             }
@@ -94,36 +94,36 @@ namespace BallPool
 
         public void OnCueBallHitBall(int cueBallId, int ballId)
         {
-            //if (gameState.cueBallHasHitSomeBall)
-            //{
-            //    return;
-            //}
-            //gameState.cueBallHasHitSomeBall = true;
+            if (gameState.cueBallHasHitSomeBall)
+            {
+                return;
+            }
+            gameState.cueBallHasHitSomeBall = true;
 
-            //if (isBlackBall(ballId))
-            //{
-            //    if (((MinipoolPlayer)BallPoolPlayer.currentPlayer).isBlack)
-            //    {
-            //        gameState.cueBallHasHitRightBall = true;
-            //    }
-            //}
-            //else if (gameState.tableIsOpened)
-            //{
-            //    gameState.cueBallHasHitRightBall = true;
-            //}
-            //else if (!gameState.playersHasBallType)
-            //{
-            //    gameState.cueBallHasHitRightBall = true;
-            //}
-            //else if (MinipoolPlayer.PlayerHasSomeBallType((MinipoolPlayer)BallPoolPlayer.currentPlayer, ballId))
-            //{
-            //    gameState.cueBallHasHitRightBall = true;
-            //}
-            //if (!gameState.cueBallHasHitRightBall)
-            //{
-            //    gameState.cueBallInHand = true;
-            //    gameState.needToChangeTurn = true;
-            //}
+            if (isBlackBall(ballId))
+            {
+                if (((MinipoolPlayer)BallPoolPlayer.currentPlayer).isBlack)
+                {
+                    gameState.cueBallHasHitRightBall = true;
+                }
+            }
+            else if (gameState.tableIsOpened)
+            {
+                gameState.cueBallHasHitRightBall = true;
+            }
+            else if (!gameState.playersHasBallType)
+            {
+                gameState.cueBallHasHitRightBall = true;
+            }
+            else if (MinipoolPlayer.PlayerHasSomeBallType((MinipoolPlayer)BallPoolPlayer.currentPlayer, ballId))
+            {
+                gameState.cueBallHasHitRightBall = true;
+            }
+            if (!gameState.cueBallHasHitRightBall)
+            {
+                gameState.cueBallInHand = true;
+                gameState.needToChangeTurn = true;
+            }
         }
 
         public void OnBallInPocket(int ballId, ref bool cueBallInPocket)
@@ -163,12 +163,12 @@ namespace BallPool
                     }
                     if (MinipoolPlayer.mainPlayer.myTurn)
                     {
-                        if (AightBallPoolGameLogic.isStripesBall(ballId))
+                        if (MinipoolGameLogic.isStripesBall(ballId))
                         {
                             MinipoolPlayer.mainPlayer.isStripes = true;
                             MinipoolPlayer.otherPlayer.isSolids = true;
                         }
-                        else if (AightBallPoolGameLogic.isSolidsBall(ballId))
+                        else if (MinipoolGameLogic.isSolidsBall(ballId))
                         {
                             MinipoolPlayer.mainPlayer.isSolids = true;
                             MinipoolPlayer.otherPlayer.isStripes = true;
@@ -176,12 +176,12 @@ namespace BallPool
                     }
                     else if (MinipoolPlayer.otherPlayer.myTurn)
                     {
-                        if (AightBallPoolGameLogic.isStripesBall(ballId))
+                        if (MinipoolGameLogic.isStripesBall(ballId))
                         {
                             MinipoolPlayer.otherPlayer.isStripes = true;
                             MinipoolPlayer.mainPlayer.isSolids = true;
                         }
-                        else if (AightBallPoolGameLogic.isSolidsBall(ballId))
+                        else if (MinipoolGameLogic.isSolidsBall(ballId))
                         {
                             MinipoolPlayer.otherPlayer.isSolids = true;
                             MinipoolPlayer.mainPlayer.isStripes = true;
@@ -203,7 +203,7 @@ namespace BallPool
                 return;
             }
             string info = "";
-           
+
             bool canSetInfo = true;
 
             if (gameState.cueBallInPocket && !blackBallInPocket)
@@ -246,7 +246,7 @@ namespace BallPool
                     MinipoolPlayer.otherPlayer.isWinner = MinipoolPlayer.otherPlayer.isBlack && !MinipoolPlayer.otherPlayer.isCueBall;
                     MinipoolPlayer.mainPlayer.isWinner = !MinipoolPlayer.otherPlayer.isWinner;
                     info = MinipoolPlayer.mainPlayer.isWinner ? (MinipoolPlayer.otherPlayer.name + " pocket the black ball " + (MinipoolPlayer.otherPlayer.isCueBall ? "with cue ball" : "")) : "";
-                } 
+                }
                 gameState.needToChangeTurn = false;
                 gameIsEnd = true;
                 BallPoolGameManager.instance.SetGameInfo(info);
@@ -276,7 +276,7 @@ namespace BallPool
                 else
                 {
                     if (info == "")
-                        info = MinipoolPlayer.otherPlayer.name + ((MinipoolPlayer.otherPlayer.isBlack ? " need to hit black ball" : (MinipoolPlayer.otherPlayer.isSolids ? " need to hit solids ball" : (MinipoolPlayer.otherPlayer.isStripes ? " need to hit stripes ball" : " need to hit solids or stripes ball")))) +
+                        info = MinipoolPlayer.otherPlayer.name + ((MinipoolPlayer.otherPlayer.isBlack ? " need to hit black ball" : (MinipoolPlayer.otherPlayer.isSolids ? " need to hit solids ball" : (AightBallPoolPlayer.otherPlayer.isStripes ? " need to hit stripes ball" : " need to hit solids or stripes ball")))) +
                         ", \nYou have cue ball in hand";
                 }
             }
@@ -349,7 +349,7 @@ namespace BallPool
 
         public static bool isCueBall(int id)
         {
-			return id == 0 || id == 1;
+            return id == 0 || id == 1;
         }
 
         public static bool isBlackBall(int id)

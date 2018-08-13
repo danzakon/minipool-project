@@ -107,7 +107,7 @@ namespace BallPool
             }
         }
 
-        public static bool PlayerHasSomeBallType(AightBallPoolPlayer player, int ballId)
+        public static bool PlayerHasSomeBallType(MinipoolPlayer player, int ballId)
         {
             return (player.isSolids && AightBallPoolGameLogic.isSolidsBall( ballId)) || (player.isStripes && AightBallPoolGameLogic.isStripesBall( ballId));
         }
@@ -121,14 +121,6 @@ namespace BallPool
             checkIsBlackInEnd = false;
         }
 
-        protected override void SavePrize(int prize)
-        {
-            base.SavePrize(prize);
-        }
 
-        protected override int GetPrize()
-        {
-            return base.GetPrize();
-        }
     }
 }

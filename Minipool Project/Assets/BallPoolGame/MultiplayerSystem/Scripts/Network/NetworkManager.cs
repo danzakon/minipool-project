@@ -270,7 +270,7 @@ namespace NetworkManagement
             set;
         }
 
-        public PlayerProfile(string id, bool isMain, Texture2D image, string imageURL, string imageName, bool isFriend, string userName, PlayerState state, int coins, int prize)
+        public PlayerProfile(string id, bool isMain, Texture2D image, string imageURL, string imageName, bool isFriend, string userName, PlayerState state, int coins)
         {
             this.id = id;
             this.isMain = isMain;
@@ -330,7 +330,7 @@ namespace NetworkManagement
                 if (!_network)
                 {
                     #if PUN
-                    _network = GameObject.Find("Dan's Network").GetComponent<dans_Network>();
+//                    _network = GameObject.Find("Dan's Network").GetComponent<dans_Network>();
                         //(new GameObject("Network")).AddComponent<dans_Network>();
                     #elif Local
                     _network = (new GameObject("Network")).AddComponent<LocalNetwork>();
@@ -338,7 +338,7 @@ namespace NetworkManagement
                     _network = (new GameObject("Network")).AddComponent<NetworkExample>();
                     #endif
 
-                    _network.Initialize();
+//                    _network.Initialize();
                 }
                 return _network;
             }
@@ -589,7 +589,7 @@ namespace NetworkManagement
                 yield return null;
             }
             mainPlayerLoadedInProgress = true;
-            mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, "", image.name, false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins(), social.GetMainPlayerPrize());
+            //mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, "", image.name, false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins());
             if (OnMainPlayerLoaded != null)
             {
                 OnMainPlayerLoaded(mainPlayer);
@@ -614,7 +614,7 @@ namespace NetworkManagement
                     image = parameters.texture;
                 }
             }
-            mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, imageURL, "", false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins(), social.GetMainPlayerPrize());
+            mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, imageURL, "", false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins());
 
             if (OnMainPlayerLoaded != null)
             {
@@ -644,7 +644,7 @@ namespace NetworkManagement
                         image = parameters.texture;
                     }
                 }
-                mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, mainURL, "", false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins(), social.GetMainPlayerPrize());
+                mainPlayer = new PlayerProfile(social.mainPlayerId, true, image, mainURL, "", false, social.GetMainPlayerName(), PlayerState.Online, social.GetMainPlayerCoins());
                 if (OnMainPlayerLoaded != null)
                 {
                     OnMainPlayerLoaded(mainPlayer);
@@ -820,7 +820,7 @@ namespace NetworkManagement
                     str = "";
                 }
             }
-            return new PlayerProfile(id, false, null, imageURL, imageName, isFrient, userName, state, coins, prize);
+            return new PlayerProfile(id, false, null, imageURL, imageName, isFrient, userName, state, coins);
         }
 
         public static string PlayerToString(PlayerProfile playerProfile)

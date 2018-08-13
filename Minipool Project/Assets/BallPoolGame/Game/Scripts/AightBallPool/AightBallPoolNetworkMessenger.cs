@@ -63,7 +63,7 @@ namespace NetworkManagement
         public void OnOpponentForceGoHome()
         {
             Debug.LogWarning("OnOpponentForceGoHome");
-            BallPoolGameManager.instance.OnForceGoHome(AightBallPoolPlayer.mainPlayer.playerId);
+            BallPoolGameManager.instance.OnForceGoHome(MinipoolPlayer.mainPlayer.playerId);
         }
         public void OnSendCueControl(float cuePivotLocalRotationY, float cueVerticalLocalRotationX, Vector2 cueDisplacementLocalPositionXY, float cueSliderLocalPositionZ, float force)
         {

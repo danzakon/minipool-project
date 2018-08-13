@@ -33,18 +33,18 @@ namespace BallPool
 
         void OnCollisionEnter(Collision other)
         {
-            if (physicsManager.inMove)
-            {
-                firstHit = true;
-            }
-            if (!firstHit && other.gameObject.layer == LayerMask.NameToLayer("Cloth"))
-            {
-                firstHit = true;
-				if (id != 0 && id != 1)
-                {
-                    body.Sleep();
-                }
-            }
+    //        if (physicsManager.inMove)
+    //        {
+    //            firstHit = true;
+    //        }
+    //        if (!firstHit && other.gameObject.layer == LayerMask.NameToLayer("Cloth"))
+    //        {
+    //            firstHit = true;
+				//if (id != 0 && id != 1)
+            //    {
+            //        //body.Sleep();
+            //    }
+            //}
         }
 
         public void OnTriggerEnter(Collider other)
@@ -76,34 +76,36 @@ namespace BallPool
 
         public void OnTriggerExit(Collider other)
         {
-            if (BallPoolGameLogic.playMode == GamePlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
-            {
-                return;
-            }
-            BallListener ball = other.GetComponent<BallListener>();
+            //if (BallPoolGameLogic.playMode == GamePlayMode.Replay || BallPoolGameLogic.controlFromNetwork)
+            //{
+            //    return;
+            //}
+            //BallListener ball = other.GetComponent<BallListener>();
 
-            if (ball)
-            {
-                OnHitBall(ball);
-            }
-            else if (other.gameObject.layer == LayerMask.NameToLayer("Board"))
-            {
-                OnHitBoard();
-            }
+            //if (ball)
+            //{
+            //    OnHitBall(ball);
+            //}
+            //else if (other.gameObject.layer == LayerMask.NameToLayer("Board"))
+            //{
+            //    OnHitBoard();
+            //}
         }
 
         public void OnHitBall(BallListener ball)
         {
-            pocketId = -1;
-            hitShapeId = ball.id;
-            physicsManager.CallBallHitBall(this, ball, true);
+            //Debug.Log("BallListener OnHitBall");
+            //pocketId = -1;
+            //hitShapeId = ball.id;
+            //physicsManager.CallBallHitBall(this, ball, true);
         }
 
         public void OnHitBoard()
         {
-            pocketId = -1;
-            hitShapeId = -1;
-            physicsManager.CallBallHitBoard(this, true);
+            //Debug.Log("BallListener OnHitBoard");
+            //pocketId = -1;
+            //hitShapeId = -1;
+            //physicsManager.CallBallHitBoard(this, true);
         }
 
         void Awake()
@@ -119,19 +121,20 @@ namespace BallPool
 
         void FixedUpdate()
         {
-			if (!body.isKinematic && !body.IsSleeping () && physicsManager.inMove) {
-				physicsManager.CallBallMove (id, body.position, body.velocity, body.angularVelocity);
-			} else {
-				//body.Sleep ();
-			}
-            if (inMove != physicsManager.inMove)
-            {
-                inMove = physicsManager.inMove;
-                if (!inMove && !body.isKinematic)
-                {
-                    //body.Sleep();
-                }
-            }
+			//if (!body.isKinematic && !body.IsSleeping () && physicsManager.inMove) {
+			//	physicsManager.CallBallMove (id, body.position, body.velocity, body.angularVelocity);
+			//} else {
+			//	body.Sleep ();
+			//}
+            //if (inMove != physicsManager.inMove)
+            //{
+            //    inMove = physicsManager.inMove;
+            //    if (!inMove && !body.isKinematic)
+            //    {
+            //        body.Sleep();
+            //    }
+            //}
+
         }
     }
 }

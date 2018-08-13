@@ -67,4 +67,7 @@ MonoBehaviour:
   - OnOpponentReadyToPlay
   - OnOpponentStartToPlay
   - OnOpponentWaitingForYourTurn
+  - RPC_LoadOtherPlayer
+  - RPC_LoadGameOther
+  - RPC_SetTurn
   DisableAutoOpenWizard: 1

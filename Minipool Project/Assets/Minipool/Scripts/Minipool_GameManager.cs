@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using BallPool.Mechanics;
 using NetworkManagement;
+using UnityEngine;
 
 namespace BallPool
 {
@@ -22,24 +23,16 @@ namespace BallPool
             physicsManager.OnBallHitBoard += PhysicsManager_OnBallHitBoard;
             physicsManager.OnBallHitPocket += PhysicsManager_OnBallHitPocket;
 
-            BallPoolPlayer.OnTurnChanged += Player_OnTurnChanged;
 
-            if (!BallPoolGameLogic.isOnLine)
-            {
-                BallPoolPlayer.turnId = (new Random()).Next(0, 2);
-                ;
-            }
+            //BallPoolPlayer.SetTurn(BallPoolPlayer.turnId);
 
-            BallPoolPlayer.SetTurn(BallPoolPlayer.turnId);
-
-            CallOnSetPrize(BallPoolPlayer.prize);
             UpdateActiveBalls();
 
-            CallOnSetPlayer(MinipoolPlayer.mainPlayer);
-            CallOnSetPlayer(MinipoolPlayer.otherPlayer);
+            //CallOnSetPlayer(MinipoolPlayer.mainPlayer);
+            //CallOnSetPlayer(MinipoolPlayer.otherPlayer);
 
-            CallOnSetAvatar(MinipoolPlayer.mainPlayer);
-            CallOnSetAvatar(MinipoolPlayer.otherPlayer);
+            //CallOnSetAvatar(MinipoolPlayer.mainPlayer);
+            //CallOnSetAvatar(MinipoolPlayer.otherPlayer);
 
         }
 
@@ -56,30 +49,30 @@ namespace BallPool
         public override void OnDisable()
         {
             base.OnDisable();
-            BallPoolPlayer.Deactivate();
-            BallPoolGameLogic.instance.Deactivate();
+            //BallPoolPlayer.Deactivate();
+            //BallPoolGameLogic.instance.Deactivate();
         }
 
         private void OpenPlayAgainMenu()
         {
-            MinipoolGameLogic.gameState.gameIsComplete = true;
-            playAgainMenuIsActive = true;
-            CallOnGameComplete();
+            //MinipoolGameLogic.gameState.gameIsComplete = true;
+            //playAgainMenuIsActive = true;
+            //CallOnGameComplete();
         }
 
         private void UpdateActiveBalls()
         {
-            MinipoolPlayer.mainPlayer.SetActiveBalls(balls);
-            MinipoolPlayer.otherPlayer.SetActiveBalls(balls);
+            //MinipoolPlayer.mainPlayer.SetActiveBalls(balls);
+            //MinipoolPlayer.otherPlayer.SetActiveBalls(balls);
 
-            CallOnSetActiveBallsIds(MinipoolPlayer.mainPlayer);
-            CallOnSetActiveBallsIds(MinipoolPlayer.otherPlayer);
+            //CallOnSetActiveBallsIds(MinipoolPlayer.mainPlayer);
+            //CallOnSetActiveBallsIds(MinipoolPlayer.otherPlayer);
         }
 
         public override void OnStartShot(string data)
         {
             base.OnStartShot(data);
-            gameLogic.ResetState();
+            //gameLogic.ResetState();
         }
         public override void OnEndShot(string data)
         {
@@ -119,6 +112,7 @@ namespace BallPool
         }
         void PhysicsManager_OnBallHitBall(BallListener ball, BallListener hitBall, bool inMove)
         {
+            Debug.Log("physics from manager");
             if (!inMove)
             {
                 return;
@@ -139,6 +133,8 @@ namespace BallPool
 
         void PhysicsManager_OnBallHitBoard(BallListener ball, bool inMove)
         {
+
+            Debug.Log("physics from manager");
             if (!inMove)
             {
                 return;
@@ -162,26 +158,6 @@ namespace BallPool
             }
         }
 
-        public override void OnForceGoHome(int winnerId)
-        {
 
-        }
-
-        private void Player_OnTurnChanged()
-        {
-            if (!playAgainMenuIsActive)
-            {
-                CallOnEnableControl(BallPoolPlayer.mainPlayer.myTurn || BallPoolGameLogic.playMode == GamePlayMode.HotSeat);
-
-                CallOnSetActivePlayer(MinipoolPlayer.mainPlayer, BallPoolPlayer.turnId == MinipoolPlayer.mainPlayer.playerId);
-                CallOnSetActivePlayer(MinipoolPlayer.otherPlayer, BallPoolPlayer.turnId == MinipoolPlayer.otherPlayer.playerId);
-
-                if (BallPoolGameLogic.playMode == GamePlayMode.PlayerAI && MinipoolPlayer.otherPlayer.myTurn)
-                {
-                    CallOnCalculateAI();
-                }
-//                shotController.ResetCueForTargeting();
-            }
-        }
     }
 }

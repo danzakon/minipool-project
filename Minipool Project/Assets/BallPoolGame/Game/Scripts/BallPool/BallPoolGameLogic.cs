@@ -47,7 +47,7 @@ namespace BallPool
         /// <summary>
         /// The game is online
         /// </summary>
-        public static bool isOnLine
+        public static bool isOnline
         {
             get
             {

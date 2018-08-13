@@ -5,7 +5,7 @@ using NetworkManagement;
 using BallPool;
 
 
-public class MinipoolNetworkGameAdapter : NetworkGameAdapter
+public class MinipoolNetworkGameAdapter 
 {
 
     private HomeMenuManager _homeMenuManager;
@@ -42,7 +42,7 @@ public class MinipoolNetworkGameAdapter : NetworkGameAdapter
 
     public void OnUpdatePrize(int prize)
     {
-        MinipoolPlayer.prize = prize;
+//        MinipoolPlayer.prize = prize;
     }
 
     public void GoToReplay()
@@ -76,11 +76,10 @@ public class MinipoolNetworkGameAdapter : NetworkGameAdapter
         MinipoolPlayer.players[1] = new MinipoolPlayer(1, name, coins, avatar, avatarURL);
         homeMenuManager.GoToPlay();
     }
-    public void OnGoToPlayWithPlayer(PlayerProfile player)
+    public void OnGoToPlayWithPlayer(MinipoolProfile _mainPlayer, MinipoolProfile _otherPlayer)
     {
-        MinipoolGameLogic.playMode = GamePlayMode.Online;
-        MinipoolPlayer.players[0].SetCoins(NetworkManager.mainPlayer.coins);
-        MinipoolPlayer.players[1] = new MinipoolPlayer(1, player.userName, player.coins, player.image, player.imageURL);
-        NetworkManager.network.OnGoToPlayWithPlayer(player);
+        //MinipoolGameLogic.playMode = GamePlayMode.Online;
+        //MinipoolPlayer.players[0] = new MinipoolPlayer(_mainPlayer.playerID, _mainPlayer.name, _mainPlayer.coins, null, null);
+        //MinipoolPlayer.players[1] = new MinipoolPlayer(_otherPlayer.playerID, _otherPlayer.name, _otherPlayer.coins, null, null);
     }
 }

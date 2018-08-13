@@ -29,12 +29,12 @@ public class AightBallPoolNetworkGameAdapter : NetworkGameAdapter
             BallPoolPlayer.players = new BallPoolPlayer[2];
             BallPoolPlayer.playersCount = 2;
 		}
-        BallPoolPlayer.players[0] = new AightBallPoolPlayer(0, name, coins, avatar, avatarURL);
+        BallPoolPlayer.players[0] = new MinipoolPlayer(0, name, coins, avatar, avatarURL);
 		//AightBallPoolPlayer.prize = prize;
 	}
 	public void OnUpdateMainPlayerName (string name)
 	{
-		AightBallPoolPlayer.mainPlayer.name = name;
+		MinipoolPlayer.mainPlayer.name = name;
 	}
 	public void OnUpdatePrize (int prize)
 	{
@@ -60,7 +60,7 @@ public class AightBallPoolNetworkGameAdapter : NetworkGameAdapter
         //AightBallPoolPlayer.prize = NetworkManager.mainPlayer.prize;
         BallPoolGameLogic.playMode = GamePlayMode.PlayerAI;
         BallPoolPlayer.players[0].SetCoins(NetworkManager.mainPlayer.coins);
-        BallPoolPlayer.players[1] = new MinipoolPlayer(1, "sharon", coins, avatar, avatarURL);
+//        BallPoolPlayer.players[1] = new MinipoolPlayer(1, "sharon", coins, avatar, avatarURL);
         homeMenuManager.GoToPlay();
 	}
 	public void OnGoToPlayHotSeatMode (int playerId, string name, int coins, object avatar, string avatarURL)
@@ -68,15 +68,15 @@ public class AightBallPoolNetworkGameAdapter : NetworkGameAdapter
         //AightBallPoolPlayer.prize = NetworkManager.mainPlayer.prize;
         BallPoolGameLogic.playMode = GamePlayMode.HotSeat;
         BallPoolPlayer.players[0].SetCoins(NetworkManager.mainPlayer.coins);
-        BallPoolPlayer.players[1] = new AightBallPoolPlayer(1, name, coins, avatar, avatarURL);
+        BallPoolPlayer.players[1] = new MinipoolPlayer(1, name, coins, avatar, avatarURL);
         homeMenuManager.GoToPlay();
 	}
-    public void OnGoToPlayWithPlayer (PlayerProfile player)
+    public void OnGoToPlayWithPlayer (NetworkManagement.PlayerProfile player)
 	{
         //AightBallPoolPlayer.prize = NetworkManager.mainPlayer.prize;
         BallPoolGameLogic.playMode = GamePlayMode.Online;
         BallPoolPlayer.players[0].SetCoins(NetworkManager.mainPlayer.coins);
-        BallPoolPlayer.players[1] = new AightBallPoolPlayer(1, player.userName, player.coins, player.image, player.imageURL);
+        BallPoolPlayer.players[1] = new MinipoolPlayer(1, player.userName, player.coins, player.image, player.imageURL);
         NetworkManager.network.OnGoToPlayWithPlayer(player);
 	}
 }

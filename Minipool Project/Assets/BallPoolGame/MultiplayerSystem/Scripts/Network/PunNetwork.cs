@@ -53,7 +53,7 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
         photonView.RPC(message, opponentPlayer, args);
     }
  
-    public override void OnGoToPlayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(NetworkManagement.PlayerProfile player)
     {
         if (PhotonNetwork.player != PhotonNetwork.masterClient)
         {
@@ -219,10 +219,10 @@ public class PunNetwork : NetworkEngine, AightBallPoolMessenger
     }
 
    
-    public override void LoadPlayers(ref PlayerProfile[] players)
+    public override void LoadPlayers(ref NetworkManagement.PlayerProfile[] players)
     {
         RoomInfo[] rooms = PhotonNetwork.GetRoomList();
-        List<PlayerProfile> playersList = new List<PlayerProfile>(0);
+		List<NetworkManagement.PlayerProfile> playersList = new List<NetworkManagement.PlayerProfile>(0);
 
         for (int i = 0; i < rooms.Length; i++)
         {

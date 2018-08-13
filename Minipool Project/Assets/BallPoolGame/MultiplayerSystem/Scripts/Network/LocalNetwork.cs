@@ -17,7 +17,7 @@ public class LocalNetwork : NetworkEngine
     {
         
     }
-    public override void OnGoToPlayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(NetworkManagement.PlayerProfile player)
     {
        
     }
@@ -76,7 +76,7 @@ public class LocalNetwork : NetworkEngine
     {
 
     }
-    public override void LoadPlayers(ref PlayerProfile[] players)
+    public override void LoadPlayers(ref NetworkManagement.PlayerProfile[] players)
     {
         players = null;
     }

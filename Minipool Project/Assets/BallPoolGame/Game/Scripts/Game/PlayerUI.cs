@@ -49,11 +49,11 @@ public class PlayerUI : MonoBehaviour
                 ballsText[i].text = id + "";
                 if (isMainPlayer)
                 {
-                    ballsImageColor[i].sprite = AightBallPoolPlayer.mainPlayer.isSolids ? ballsUIManager.solidsBall : (AightBallPoolGameLogic.isBlackBall(id) ? ballsUIManager.solidsBall : ballsUIManager.stripesBall);
+                    ballsImageColor[i].sprite = MinipoolPlayer.mainPlayer.isSolids ? ballsUIManager.solidsBall : (AightBallPoolGameLogic.isBlackBall(id) ? ballsUIManager.solidsBall : ballsUIManager.stripesBall);
                 }
                 else
                 {
-                    ballsImageColor[i].sprite = AightBallPoolPlayer.otherPlayer.isSolids ? ballsUIManager.solidsBall : (AightBallPoolGameLogic.isBlackBall(id) ? ballsUIManager.solidsBall : ballsUIManager.stripesBall);
+                    ballsImageColor[i].sprite = MinipoolPlayer.otherPlayer.isSolids ? ballsUIManager.solidsBall : (AightBallPoolGameLogic.isBlackBall(id) ? ballsUIManager.solidsBall : ballsUIManager.stripesBall);
                 }
                 Color color = ballsUIManager.ballsColors[id];
                 ballsImageColor[i].color = new Color(color.r, color.g, color.b);

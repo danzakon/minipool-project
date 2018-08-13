@@ -121,26 +121,26 @@ public class PlayerProfileUI : MonoBehaviour
         userName.text = player.userName;
         coins.text = player.coins + "";
         state.enabled = true;
-        switch (player.state)
-        {
-            case PlayerState.Offline:
-                state.color = Color.Lerp(Color.black, Color.white, 0.7f);
-                break;
-            case PlayerState.Online:
-                state.color = Color.green;
-                break;
-            case PlayerState.Away:
-                state.color = Color.yellow;
-                break;
-            case PlayerState.Busy:
-                state.color = Color.red;
-                break;
-            case PlayerState.Playing:
-                state.color = Color.blue;
-                break;
-            default:
-                break;
-        }
+        //switch (player.state)
+        //{
+        //    case PlayerState.Offline:
+        //        state.color = Color.Lerp(Color.black, Color.white, 0.7f);
+        //        break;
+        //    case PlayerState.Online:
+        //        state.color = Color.green;
+        //        break;
+        //    case PlayerState.Away:
+        //        state.color = Color.yellow;
+        //        break;
+        //    case PlayerState.Busy:
+        //        state.color = Color.red;
+        //        break;
+        //    case PlayerState.Playing:
+        //        state.color = Color.blue;
+        //        break;
+        //    default:
+        //        break;
+        //}
         if (isFriend)
         {
             isFriend.gameObject.SetActive(player.isFriend);

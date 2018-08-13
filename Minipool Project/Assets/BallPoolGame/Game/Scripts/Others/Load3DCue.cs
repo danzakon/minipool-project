@@ -38,7 +38,7 @@ public class Load3DCue : MonoBehaviour
             yield return null;
         }
         mainCue3DPrefab = productCue3D.mainCue3DPrefab;
-        if (!BallPoolGameLogic.isOnLine || !AightBallPoolNetworkGameAdapter.isSameGraphicsMode)
+        if (!BallPoolGameLogic.isOnline || !AightBallPoolNetworkGameAdapter.isSameGraphicsMode)
         {
             CreateCue(mainCue3DPrefab);
         }

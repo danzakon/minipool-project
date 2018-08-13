@@ -11,25 +11,30 @@ using NetworkManagement;
 public class dans_GameManager : MonoBehaviour {
     // public classes
     public Minipool_ShotController shotController;
+    public MinipoolGameLogic gameLogic;
 
     // private classes
+    [Header("Managers")]
     [SerializeField] private PhysicsManager physicsManager;
     [SerializeField] private TimeController timeController;
-    [SerializeField] private MinipoolGameLogic gameLogic;
     [SerializeField] private MinipoolGameUI gameUIController;
     [SerializeField] private BallPoolAIManager aiManager;
-
-    // instances
-    private MinipoolGameManager minipool_GameManager;
-
+    private MinipoolGameManager minipoolGameManager;
 
     // objects
+    [Header("Balls Info")]
     public Ball[] balls;
+    public int[] activeBallIds;
+
+    [Header("UI Objects")]
     [SerializeField] private Text gameInfo;
+    [SerializeField] private Text mainPlayerNameText;
+    [SerializeField] private Text mainPlayerCoinsText;
+    [SerializeField] private Text otherPlayerNameText;
+    [SerializeField] private Text otherPlayerCoinsText;
 
 
     // info
-    public int[] activeBallIds;
     private bool onBallHitPocket = false;
     private bool playAgainMenuIsActive = false;
 
@@ -40,112 +45,107 @@ public class dans_GameManager : MonoBehaviour {
     public static int RED_BALL = 3;
     public static int BLACK_BALL = 4;
 
+    private PhotonView photonView;
+
+    public int turnID;
 
 	private void Awake()
 	{
-        // save data at start
-        DataManager.SaveGameData();
+        SetPlayerInfoUI();
 
-        // TODO: fix
-        // NetworkManager.network.OnNetwork += NetworkManager_network_OnNetwork;
+        photonView = this.gameObject.AddComponent<PhotonView>();
+        photonView.ObservedComponents = new List<Component>(0);
+        photonView.ObservedComponents.Add(this);
+        photonView.synchronization = ViewSynchronization.ReliableDeltaCompressed;
+        photonView.viewID = 1;
+        photonView = gameObject.GetComponent<PhotonView>();
 
-        // initialize game manager instance
-        minipool_GameManager = new MinipoolGameManager();
-        minipool_GameManager.Initialize(physicsManager, aiManager, balls);
-        minipool_GameManager.maxPlayTime = timeController.maxPlayTime;
+        gameInfo.text = "";
 
-        // initialize game logic instance
-        gameLogic = new MinipoolGameLogic();
+        StartCoroutine(SetFirstTurn());
 
-        // events -> functions
-        minipool_GameManager.OnEndTime += OnEndTime;
-        minipool_GameManager.OnSetGameInfo += OnSetGameInfo;
-        gameUIController.OnForceGoHome += OnForceGoHome;
+        minipoolGameManager = new MinipoolGameManager();
+        minipoolGameManager.Initialize(physicsManager, aiManager, balls);
+        minipoolGameManager.gameLogic = new MinipoolGameLogic();
+    }
 
-        // check if network is initialized
-        if(!NetworkManager.initialized)
+    void Start()
+    {
+        minipoolGameManager.Start();
+    }
+
+    private void SwitchTurn()
+    {
+        if (turnID == MinipoolPlayerNetwork.Instance.mainPlayer.playerID)
         {
-            Debug.LogWarning("Network manager is not initialized, going home...");
-            gameUIController.GoHome();
-            enabled = false;
-            return;
+            photonView.RPC("RPC_SetTurn", PhotonTargets.All, MinipoolPlayerNetwork.Instance.otherPlayer.playerID);
         }
-	}
-
-	private void Start()
-	{
-        // TODO
-        // minipool_GameManager.OnSetPrize += (int prize) => { this.prize.text = prize + ""; };
-
-
-        // events -> functions
-        minipool_GameManager.OnCalculateAI += OnCalculateAI;
-        minipool_GameManager.OnSetPlayer += OnSetPlayer;
-        minipool_GameManager.OnSetAvatar += OnSetAvatar;
-        minipool_GameManager.OnSetActivePlayer += OnSetActivePlayer;
-        minipool_GameManager.OnGameComplete += OnGameComplete;
-        minipool_GameManager.OnSetActiveBallsIds += OnSetActiveBallIds;
-        minipool_GameManager.OnEnableControl += (bool value) =>
+        else
         {
-            shotController.OnEnableControl(value);
-        };
-
-        // shot controller events -> functions
-        shotController.OnEndCalculateAI += OnEndCalculateAI;
-        shotController.OnSelectBall += OnSelectBall;
-        shotController.OnUnselectBall += OnUnselectBall;
-
-        minipool_GameManager.Start();
-
-        // turn change -> function
-        BallPoolPlayer.OnTurnChanged += Player_OnTurnChanged;
-
-        if (!MinipoolGameLogic.isOnLine)
-        {
-            // user goes first (for testing)
-            // TODO use random
-            BallPoolPlayer.turnId = 1;
+            photonView.RPC("RPC_SetTurn", PhotonTargets.All, MinipoolPlayerNetwork.Instance.mainPlayer.playerID);
         }
-        else if (MinipoolGameLogic.isOnLine)
+    }
+
+    private IEnumerator SetFirstTurn()
+    {
+        yield return new WaitForSeconds(1.0f);
+        if (PhotonNetwork.isMasterClient)
         {
-            NetworkManager.network.SendRemoteMessage("OnOpponenWaitingForYourTurn");
-            NetworkManager.network.SendRemoteMessage("OnOppenenInGameScene");
-            StartCoroutine(UpdateNetworkTime());
-
-            // display whose turn it is in UI
-            gameInfo.text = (BallPoolPlayer.mainPlayer.myTurn ? "Your turn" : "Your opponents turn") + "\nGood luck!";
-
-            // 
-            StartCoroutine(HideGameInfoText(gameInfo.text));
-            Resources.UnloadUnusedAssets();
+            while (turnID != MinipoolPlayerNetwork.Instance.mainPlayer.playerID)
+            {
+                photonView.RPC("RPC_SetTurn", PhotonTargets.All, MinipoolPlayerNetwork.Instance.mainPlayer.playerID);
+            }
         }
- 	}
 
-	private void Update()
-	{
-        minipool_GameManager.Update(Time.deltaTime);
-        timeController.UpdateTime(minipool_GameManager.playTime);
-	}
-
-    public void SetBallsState(int number)
-    {
-        
     }
 
-    private int GetTimeInSeconds()
+    private void Update()
     {
-        return 0;
+        TurnTimer(Time.deltaTime);
+        minipoolGameManager.Update(Time.deltaTime);
+        timeController.UpdateTime(minipoolGameManager.playTime);
     }
 
-    void GameManager_TestFunction()
+    public float turnTime = 10.0f;
+    private void TurnTimer(float deltaTime)
     {
-        
+        turnTime -= deltaTime;
+        if (turnTime < 0.0f)
+        {
+            SwitchTurn();
+            turnTime = 10.0f;
+        }
     }
 
-    void OnEndTime()
+    [PunRPC]
+    void RPC_SetTurn(int _turnID)
     {
-        
+        turnID = _turnID;
+
+        if(shotController.cueBall == shotController.cueBallp1)
+        {
+            shotController.cueBall = shotController.cueBallp2;
+        }
+        else
+        {
+            shotController.cueBall = shotController.cueBallp1;
+        }
+
+        gameInfo.text = (turnID == MinipoolPlayerNetwork.Instance.mainPlayer.playerID ? "Your turn" : "Your opponents turn") + "\nGood luck!";
+        StartCoroutine(HideGameInfoText(gameInfo.text));
+        Debug.Log("turn id:" + turnID);
     }
+
+
+    private void SetPlayerInfoUI()
+    {
+        mainPlayerNameText.text = MinipoolPlayerNetwork.Instance.mainPlayer.name;
+        mainPlayerCoinsText.text = MinipoolPlayerNetwork.Instance.mainPlayer.coins.ToString();
+        otherPlayerNameText.text = MinipoolPlayerNetwork.Instance.otherPlayer.name;
+        otherPlayerCoinsText.text = MinipoolPlayerNetwork.Instance.otherPlayer.coins.ToString();
+    }
+
+
 
 
     private bool displayGameInfo = false;
@@ -166,114 +166,64 @@ public class dans_GameManager : MonoBehaviour {
         displayGameInfo = false;
     }
 
-    void OnCalculateAI ()
-    {
-        
-    }
 
-    // TODO: combine with AightBallPoolManager CallOnSetPlayer
-    void OnSetPlayer(BallPoolPlayer player)
-    {
-        
-    }
 
-    void OnSetActiveBallIds(BallPoolPlayer player)
-    {
-        
-    }
 
-    void OnSetActivePlayer(BallPoolPlayer player, bool value)
-    {
-        
-    }
 
-    void OnGameComplete()
-    {
-        
-    }
 
-    void UpdateActiveBalls()
-    {
-        
-    }
 
-    void OnStartShot(string data)
-    {
-        
-    }
 
-    void OnEndShot(string data)
-    {
-        
-    }
+
+
+
+
 
     void PhysicsManager_OnBallHitBall(BallListener ball, BallListener hitBall, bool inMove)
     {
-        
+        Debug.Log("PhysicsManager_OnBallHitBall");
+        if (!inMove)
+        {
+            return;
+        }
+        if (shotController.targetBallListener == hitBall)
+        {
+            hitBall.body.velocity = hitBall.body.velocity.magnitude * shotController.targetBallSavedDirection;
+            shotController.targetBallListener = null;
+        }
+        balls[ball.id].OnState(BallState.HitBall);
+        bool isCueBall = MinipoolGameLogic.isCueBall(ball.id);
+
+        if (isCueBall)
+        {
+            gameLogic.OnCueBallHitBall(ball.id, hitBall.id);
+        }
     }
 
     void PhysicsManager_OnBallHitBoard(BallListener ball, bool inMove)
     {
-        
+        Debug.Log("PhysicsManager_OnBallHitBoard");
+        if (!inMove)
+        {
+            return;
+        }
+        balls[ball.id].OnState(BallState.HitBoard);
+        gameLogic.OnBallHitBoard(ball.id);
     }
 
     void PhysicsManager_OnBallHitPocket(BallListener ball, PocketListener pocket, bool inMove)
     {
-        
-    }
-
-    void Player_OnTurnChanged()
-    {
-        
-    }
-
-    void OnForceGoHome()
-    {
-        
-    }
-
-    void TriggerPlayAgainMenu(bool isOn)
-    {
-        // TODO: Implement
-        Debug.LogWarning("TriggerPlayAgainMenu not implemented");
-    }
-
-    private IEnumerator DownloadAndSetAvatar(BallPoolPlayer player)
-    {
-        yield return null;
-    }
-
-
-    // TODO: combine with AightBallPoolManager CallOnSetAvatar
-    void OnSetAvatar(BallPoolPlayer player)
-    {
-        StartCoroutine(DownloadAndSetAvatar(player));
-    }
-
-    void OnEndCalculateAI()
-    {
-        
-    }
-
-    void OnSelectBall()
-    {
-
-    }
-
-    void OnUnselectBall()
-    {
-
-    }
-
-    // CallOnSetPrize from AightBallPoolManager
-    void OnSetPrize()
-    {
-        
-    }
-
-    IEnumerator UpdateNetworkTime()
-    {
-        yield return null;
+        Debug.Log("PhysicsManager_OnBallHitPocket");
+        if (!inMove)
+        {
+            return;
+        }
+        balls[ball.id].OnState(BallState.EnterInPocket);
+        bool cueBallInPocket = false;
+        gameLogic.OnBallInPocket(ball.id, ref cueBallInPocket);
+        if (!cueBallInPocket)
+        {
+            onBallHitPocket = true;
+        }
     }
 
 }

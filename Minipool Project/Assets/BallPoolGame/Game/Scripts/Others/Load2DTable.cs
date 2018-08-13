@@ -83,7 +83,7 @@ public class Load2DTable : MonoBehaviour
         mainTableCloth2DTexture = productTable2D.mainTableCloth2DTexture;
         mainTable2DColor = productTable2D.mainTable2DColor;
         yield return null;
-        int number = (AightBallPoolPlayer.mainPlayer.coins == AightBallPoolPlayer.otherPlayer.coins) ? 0 : (AightBallPoolPlayer.mainPlayer.coins > AightBallPoolPlayer.otherPlayer.coins ? 1 : 2);
+        int number = (MinipoolPlayer.mainPlayer.coins == MinipoolPlayer.otherPlayer.coins) ? 0 : (MinipoolPlayer.mainPlayer.coins > MinipoolPlayer.otherPlayer.coins ? 1 : 2);
         StartCoroutine(SetTable2DTextureOnStartGame(number));
     }
     public IEnumerator SetTable2DTextureOnStartGame(int number)

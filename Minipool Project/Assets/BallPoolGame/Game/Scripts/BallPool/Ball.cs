@@ -300,6 +300,8 @@ namespace BallPool.Mechanics
     
         void FixedUpdate()
         {
+            transform.position = listener.transform.position;
+
             if (isFollow)
             {
                 if (oldMechanicalStateId != mechanicalStateId)

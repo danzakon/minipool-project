@@ -23,20 +23,12 @@ public class MinipoolGameUI : MonoBehaviour
 
     void Awake()
     {
-        if (!NetworkManager.initialized)
-        {
-            enabled = false;
-            return;
-        }
+
     }
 
     public void GoHome()
     {
         physicsManager.Disable();
-        if (NetworkManager.mainPlayer != null)
-        {
-            NetworkManager.mainPlayer.state = PlayerState.Online;
-        }
         SceneManager.LoadScene(homeScene);
     }
 

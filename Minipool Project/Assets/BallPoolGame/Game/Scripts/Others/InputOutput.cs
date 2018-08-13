@@ -166,11 +166,11 @@ public class InputOutput : MonoBehaviour
 			return;
 		}
 
-		if (rotationMode) {
-			RotateCamera ();
-		} else {
-			xrotationDir = 0;
-		}
+		//if (rotationMode) {
+		//	RotateCamera ();
+		//} else {
+		//	xrotationDir = 0;
+		//}
 			
         if (Input.GetMouseButtonDown(0))
         {

@@ -24,6 +24,9 @@ namespace BallPool
             private set;
         }
 
+        /// <summary>
+        /// The Player need to put the black ball
+        /// </summary>
         public bool isBlack
         {
             get;
@@ -70,7 +73,38 @@ namespace BallPool
 
         public override void SetActiveBalls(Ball[] balls)
         {
+            if (balls == null || balls.Length == 0)
+            {
+                return;
+            }
+            this.balls = new List<Ball>(0);
+            foreach (Ball ball in balls)
+            {
+                if (!ball.inPocket && ball.gameObject.activeInHierarchy)
+                {
+                    if (isStripes && MinipoolGameLogic.isStripesBall(ball.id))
+                    {
+                        this.balls.Add(ball);
+                    }
+                    else if (isSolids && MinipoolGameLogic.isSolidsBall(ball.id))
+                    {
+                        this.balls.Add(ball);
+                    }
+                }
+            }
 
+            if (MinipoolGameLogic.gameState.playersHasBallType)
+            {
+                if (this.balls.Count == 0)
+                {
+                    Ball blackBall = MinipoolGameLogic.GetBlackBall(BallPoolGameManager.instance.balls);
+                    if (!blackBall.inPocket)
+                    {
+                        checkIsBlackInEnd = true;
+                        this.balls.Add(blackBall);
+                    }
+                }
+            }
         }
 
         public static bool PlayerHasSomeBallType(MinipoolPlayer player, int ballId)
@@ -87,14 +121,6 @@ namespace BallPool
             checkIsBlackInEnd = false;
         }
 
-        protected override void SavePrize(int prize)
-        {
-            
-        }
 
-        protected override int GetPrize()
-        {
-            return 0;
-        }
     }
 }

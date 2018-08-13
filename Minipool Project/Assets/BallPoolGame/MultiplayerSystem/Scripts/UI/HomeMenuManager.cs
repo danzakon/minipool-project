@@ -151,7 +151,6 @@ public class HomeMenuManager : MonoBehaviour
                                 prizeInput.text = prize + "";
                             }
                             UpdatePrize(prize);
-                            NetworkManager.social.SaveMainPlayerPrize(prize);
                         }
                         else
                         {
@@ -273,8 +272,6 @@ public class HomeMenuManager : MonoBehaviour
 
     public void UpdatePrize(int prize)
     {
-        networkGameAdapter.OnUpdatePrize(prize);
-//        NetworkManager.mainPlayer.prize = prize;
         mainPlayerUI.SetPlayer(NetworkManager.mainPlayer);
     }
 
@@ -362,14 +359,14 @@ public class HomeMenuManager : MonoBehaviour
         }
     }
 
-    void NetworkManager_OnFriendsAndRandomPlayersLoaded(PlayerProfile[] players)
+    void NetworkManager_OnFriendsAndRandomPlayersLoaded(NetworkManagement.PlayerProfile[] players)
     {
         FindPlayersByNamePrizeIsOnlineAndIsFriend();
     }
 
     void RoomsListManager_OnSelecPlayerProfile(NetworkManagement.Room room)
     {
-        PlayerProfile player = room.mainPlayer;
+		NetworkManagement.PlayerProfile player = room.mainPlayer;
 
             CheckOpponentImageByName(player);
             opponentUI.SetPlayer(player);
@@ -384,23 +381,12 @@ public class HomeMenuManager : MonoBehaviour
 
     void NetworkManager_OnMainPlayerLoaded(NetworkManagement.PlayerProfile player)
     {
-        int prize = NetworkManager.social.GetMainPlayerPrize();
-        if (prize < NetworkManager.social.minOnLinePrize)
-        {
-            prize = NetworkManager.social.minOnLinePrize;
-            NetworkManager.social.SaveMainPlayerPrize(prize);
-        }
-        if (prize > NetworkManager.mainPlayer.coins)
-        {
-            prize = NetworkManager.mainPlayer.coins;
-            NetworkManager.social.SaveMainPlayerPrize(prize);
-        }
-        UpdatePrize(prize);
+
 
         networkGameAdapter.OnMainPlayerLoaded(0, player.userName, player.coins, player.image, player.imageURL);
         mainPlayerUI.SetPlayer(player);
         nameInput.text = player.userName;
-//        prizeInput.text = player.prize + "";
+
     }
 
     public void GoToReplay()
@@ -500,7 +486,7 @@ public class HomeMenuManager : MonoBehaviour
     {
         if (NetworkManager.mainPlayer != null)
         {
-            NetworkManager.mainPlayer.state = PlayerState.Playing;
+//            NetworkManager.mainPlayer.state = PlayerState.Playing;
             mainPlayerUI.SetPlayer(NetworkManager.mainPlayer);
         }
         SceneManager.LoadScene(playScene);
@@ -508,7 +494,7 @@ public class HomeMenuManager : MonoBehaviour
 
     public void CancleGoToPlay(PlayerState opponentState, string playerId)
     {
-        NetworkManager.FindPlayer(playerId).state = opponentState;
+//        NetworkManager.FindPlayer(playerId).state = opponentState;
         NetworkManager.UpdatePlayers();
         StartCoroutine(NetworkManager.LoadRandomPlayer());
     }
@@ -673,7 +659,7 @@ public class HomeMenuManager : MonoBehaviour
         }
     }
 
-    void CheckOpponentImageByName(PlayerProfile player)
+    void CheckOpponentImageByName(NetworkManagement.PlayerProfile player)
     {
         if (player != null && !string.IsNullOrEmpty(player.imageName))
         {
@@ -697,7 +683,7 @@ public class HomeMenuManager : MonoBehaviour
         NetworkManagement.Room[] rooms = new NetworkManagement.Room[playerProfiles.Length];
         for (int i = 0; i < rooms.Length; i++)
         {
-            List<PlayerProfile> players = new List<PlayerProfile>(0);
+			List<NetworkManagement.PlayerProfile> players = new List<NetworkManagement.PlayerProfile>(0);
             players.Add(playerProfiles[i]);
             CheckOpponentImageByName(playerProfiles[i]);
             rooms[i] = new NetworkManagement.Room(i, prize, players);

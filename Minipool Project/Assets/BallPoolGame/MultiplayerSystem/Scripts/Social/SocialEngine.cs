@@ -85,8 +85,6 @@ namespace NetworkManagement
         public abstract string GetMainPlayerName();
         public abstract void SaveMainPlayerCoins(int playerCoins);
         public abstract int GetMainPlayerCoins();
-        public abstract void SaveMainPlayerPrize(int prize);
-        public abstract int GetMainPlayerPrize();
             
         public abstract void SaveAvatarURL(string url);
         public abstract string GetAvatarURL();

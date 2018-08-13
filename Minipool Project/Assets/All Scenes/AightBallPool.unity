@@ -11933,7 +11933,7 @@ MonoBehaviour:
   gameUIController: {fileID: 1136}
   shotController: {fileID: 1140}
   physicsManager: {fileID: 1014}
-  aiManager: {fileID: 1227}
+  aiManager: {fileID: 0}
   timeController: {fileID: 1138}
   balls:
   - {fileID: 1004}
@@ -11971,8 +11971,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayTime: 30
-  slider1: {fileID: 981}
-  slider2: {fileID: 1126}
 --- !u!114 &1139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12061,7 +12059,6 @@ MonoBehaviour:
   cueSlidingMaxDisplacement: 0.5
   physicsManager: {fileID: 1014}
   gameManager: {fileID: 1137}
-  aiManager: {fileID: 1227}
   uiController: {fileID: 1136}
   hitBallClip: {fileID: 8300000, guid: 2253d40a60ea94433a8843688abd83b5, type: 3}
   cuePivot: {fileID: 348}
@@ -15536,9 +15533,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcbb9f7cb6a0641199ddb0f49152a282, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shotController: {fileID: 1282302949}
-  gameManager: {fileID: 1282302944}
-  pockets: {fileID: 575512973}
 --- !u!1 &104718515
 GameObject:
   m_ObjectHideFlags: 0
@@ -21246,6 +21240,10 @@ Prefab:
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1137}
+    - target: {fileID: 1586384160787784, guid: 0009c8a211bc14c5db0f81ae82ae4ea3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0009c8a211bc14c5db0f81ae82ae4ea3, type: 2}
   m_IsPrefabParent: 0
@@ -27656,7 +27654,7 @@ MonoBehaviour:
   gameUIController: {fileID: 1282302946}
   shotController: {fileID: 1282302949}
   physicsManager: {fileID: 1272839608}
-  aiManager: {fileID: 104139058}
+  aiManager: {fileID: 0}
   timeController: {fileID: 1282302945}
   balls:
   - {fileID: 2090320119}
@@ -27694,8 +27692,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxPlayTime: 30
-  slider1: {fileID: 571674405}
-  slider2: {fileID: 2079377120}
 --- !u!114 &1282302946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27809,7 +27805,6 @@ MonoBehaviour:
   cueSlidingMaxDisplacement: 0.5
   physicsManager: {fileID: 1272839608}
   gameManager: {fileID: 1282302944}
-  aiManager: {fileID: 104139058}
   uiController: {fileID: 1282302946}
   hitBallClip: {fileID: 8300000, guid: 2253d40a60ea94433a8843688abd83b5, type: 3}
   cuePivot: {fileID: 142992972}

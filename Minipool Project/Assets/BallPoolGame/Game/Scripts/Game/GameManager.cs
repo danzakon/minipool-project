@@ -118,7 +118,7 @@ public class GameManager : MonoBehaviour
 		}
 		aightBallPoolGameManager.Start();
 
-		if (BallPoolGameLogic.isOnLine)
+		if (BallPoolGameLogic.isOnline)
 		{
 			NetworkManager.network.SendRemoteMessage("OnOpponenWaitingForYourTurn");
 			NetworkManager.network.SendRemoteMessage("OnOpponenInGameScene");
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
 		aightBallPoolGameManager.Update(Time.deltaTime);
 		timeController.UpdateTime(aightBallPoolGameManager.playTime);
 
-		if (AightBallPoolPlayer.currentPlayer.playerId == 1) {
+		if (MinipoolPlayer.currentPlayer.playerId == 1) {
 			shotController.cueBall = shotController.cueBallp1;
 		} else {
 			shotController.cueBall = shotController.cueBallp2;
@@ -220,7 +220,7 @@ public class GameManager : MonoBehaviour
 
 	void ShotController_OnUnselectBall ()
 	{
-		if (BallPoolGameLogic.isOnLine)
+		if (BallPoolGameLogic.isOnline)
 		{
 			Debug.LogWarning("ShotController_OnUnselectBall" + BallPoolGameLogic.controlInNetwork);
 			NetworkManager.network.SendRemoteMessage("SetBallPosition", shotController.cueBall.position);
@@ -305,26 +305,26 @@ public class GameManager : MonoBehaviour
 		BallPoolPlayer.SetWinner(BallPoolPlayer.mainPlayer.playerId);
 		if(shotController.opponenIsReadToPlay)
 		{
-			BallPoolPlayer.SetMainPlayerWinnerCouns();
+
 		}
 		else
 		{
-			BallPoolPlayer.ReturnMainPlayerCouns();
+
 		}
 		BallPoolPlayer.SaveCoins();
 		playAgainMenu.ShowMainPlayer();
-		mainPlayerUI.SetPlayer(AightBallPoolPlayer.mainPlayer);
-		otherPlayerUI.SetPlayer(AightBallPoolPlayer.otherPlayer);
+		mainPlayerUI.SetPlayer(MinipoolPlayer.mainPlayer);
+		otherPlayerUI.SetPlayer(MinipoolPlayer.otherPlayer);
 
 	}
 
 	void GameUIController_OnForceGoHome ()
 	{
-		if (BallPoolGameLogic.isOnLine)
+		if (BallPoolGameLogic.isOnline)
 		{
 			NetworkManager.network.SendRemoteMessage("OnOpponentForceGoHome");
 		}
-		aightBallPoolGameManager.OnForceGoHome(AightBallPoolPlayer.otherPlayer.playerId);
+		aightBallPoolGameManager.OnForceGoHome(MinipoolPlayer.otherPlayer.playerId);
 	}
 
 
@@ -339,8 +339,8 @@ public class GameManager : MonoBehaviour
 			}
 			shotController.shotBack.enabled = false;
 			BallPoolPlayer winner = BallPoolPlayer.GetWinner();
-			mainPlayerUI.SetPlayer(AightBallPoolPlayer.mainPlayer);
-			otherPlayerUI.SetPlayer(AightBallPoolPlayer.otherPlayer);
+			mainPlayerUI.SetPlayer(MinipoolPlayer.mainPlayer);
+			otherPlayerUI.SetPlayer(MinipoolPlayer.otherPlayer);
 			playAgainMenu.Show(winner);
 		}
 		else
@@ -392,24 +392,24 @@ public class GameManager : MonoBehaviour
 	{
 		if (player.playerId == 0)
 		{
-			if (AightBallPoolPlayer.mainPlayer.avatar == null)
+			if (MinipoolPlayer.mainPlayer.avatar == null)
 			{
-				yield return StartCoroutine(AightBallPoolPlayer.mainPlayer.DownloadAvatar());
+				yield return StartCoroutine(MinipoolPlayer.mainPlayer.DownloadAvatar());
 			}
-			if (AightBallPoolPlayer.mainPlayer.avatar != null)
+			if (MinipoolPlayer.mainPlayer.avatar != null)
 			{
-				mainPlayerUI.avatarImage.texture = (Texture2D)AightBallPoolPlayer.mainPlayer.avatar;
+				mainPlayerUI.avatarImage.texture = (Texture2D)MinipoolPlayer.mainPlayer.avatar;
 			}
 		}
 		else if (player.playerId == 1)
 		{
-			if (AightBallPoolPlayer.otherPlayer.avatar == null)
+			if (MinipoolPlayer.otherPlayer.avatar == null)
 			{
-				yield return StartCoroutine(AightBallPoolPlayer.otherPlayer.DownloadAvatar());
+				yield return StartCoroutine(MinipoolPlayer.otherPlayer.DownloadAvatar());
 			}
-			if (AightBallPoolPlayer.otherPlayer.avatar != null)
+			if (MinipoolPlayer.otherPlayer.avatar != null)
 			{
-				otherPlayerUI.avatarImage.texture = (Texture2D)AightBallPoolPlayer.otherPlayer.avatar;
+				otherPlayerUI.avatarImage.texture = (Texture2D)MinipoolPlayer.otherPlayer.avatar;
 			}
 		}
 	}

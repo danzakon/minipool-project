@@ -22,7 +22,7 @@ public class NetworkExample : NetworkEngine
         //        System.Reflection.MethodInfo methodInfo = messenger.GetType().GetMethod(message);
         //        methodInfo.Invoke(messenger, args);
     }
-    public override void OnGoToPlayWithPlayer(PlayerProfile player)
+    public override void OnGoToPlayWithPlayer(NetworkManagement.PlayerProfile player)
     {
         Debug.LogWarning("OnGoToPLayWithPlayer " + player);
         adapter.SetTurn(Random.Range(0, 2));
@@ -89,11 +89,11 @@ public class NetworkExample : NetworkEngine
     {
 
     }
-    public override void LoadPlayers(ref PlayerProfile[] players)
+    public override void LoadPlayers(ref NetworkManagement.PlayerProfile[] players)
     {
         //Imitating players loading
         HomeMenuManager homeMenuManager = HomeMenuManager.FindObjectOfType<HomeMenuManager>();
-        players = new PlayerProfile[homeMenuManager.defaultAvatars.Length];
+        players = new NetworkManagement.PlayerProfile[homeMenuManager.defaultAvatars.Length];
         int randomOnline = Random.Range(0, players.Length);
 
         for (int i = 0; i < homeMenuManager.defaultAvatars.Length; i++)
@@ -106,8 +106,7 @@ public class NetworkExample : NetworkEngine
             }
             int coins = Random.Range(30, 10000);
             int mainPlayerSavedPrize = NetworkManager.social.GetMainPlayerCoins();
-            int prize = i == randomOnline? mainPlayerSavedPrize == 0?500:mainPlayerSavedPrize : Random.Range(30, 999);
-            players[i] = new PlayerProfile(i + "", false, homeMenuManager.defaultAvatars[i], "", homeMenuManager.defaultAvatars[i].name, isFriend, homeMenuManager.defaultAvatars[i].name, state, coins, prize);
+//            players[i] = new PlayerProfile(i + "", false, homeMenuManager.defaultAvatars[i], "", homeMenuManager.defaultAvatars[i].name, isFriend, homeMenuManager.defaultAvatars[i].name, state, coins);
         }
 
     }

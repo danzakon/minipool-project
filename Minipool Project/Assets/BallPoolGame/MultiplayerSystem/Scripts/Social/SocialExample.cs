@@ -68,19 +68,6 @@ public class SocialExample : SocialEngine
         return savedCoins;
     }
 
-    public override void SaveMainPlayerPrize(int prize)
-    {
-        DataManager.SetIntData("MainPlayerPrize", prize);
-    }
-    public override int GetMainPlayerPrize()
-    {
-        int prize = DataManager.GetIntData("MainPlayerPrize");
-        if (prize == 0)
-        {
-            prize = minOnLinePrize;
-        }
-        return prize;
-    }
 
     public override void SaveAvatarURL(string url)
     {

@@ -130,7 +130,7 @@ namespace BallPool.Mechanics
             inMove = false;
 
             Time.fixedDeltaTime = 0.005f;
-            Physics.bounceThreshold = 0.01f;
+            Physics.bounceThreshold = 0.5f;
             Physics.sleepThreshold = 0.01f;
             Physics.defaultContactOffset = 0.0005f;
             Physics.defaultSolverIterations = 1;
@@ -146,7 +146,7 @@ namespace BallPool.Mechanics
             foreach (var listener in ballsListener)
             {
                 listener.body.drag = 0.5f;
-                listener.body.angularDrag = 0.7f;
+                listener.body.angularDrag = 0.3f;
                 listener.body.mass = _ballMass;
                 listener.body.maxDepenetrationVelocity = _ballMaxVelocity;
                 listener.body.maxAngularVelocity = _ballMaxAngularVelocity;
@@ -159,50 +159,52 @@ namespace BallPool.Mechanics
             }
         }
 
-//        void FixedUpdate()
-//        {
-//            if (inMove)
-//            {
-//                moveTime += Time.fixedDeltaTime;
-//                if (!BallPoolGameLogic.controlFromNetwork)
-//                {
-//                    if (!checkInProgress && CheckIsSleeping())
-//                    {
-//                        checkInProgress = true;
-//                        StartCoroutine(WaitAndCheckMove());
-//                    }
-//                }
-//            }
-//        }
+        void FixedUpdate()
+        {
+            if (inMove)
+            {
+                moveTime += Time.fixedDeltaTime;
+                if (!BallPoolGameLogic.controlFromNetwork)
+                {
+                    //if (!checkInProgress && CheckIsSleeping())
+                    //{
+                    //    checkInProgress = true;
+                    //    StartCoroutine(WaitAndCheckMove());
+                    //}
+                }
+            }
+        }
           
         IEnumerator Start()
         {
-            while (true)
-            {
-                yield return new WaitForFixedUpdate();
-                if (inMove)
-                {
-                    moveTime += Time.fixedDeltaTime;
-                    if (!BallPoolGameLogic.controlFromNetwork)
-                    {
-                        if (CheckIsSleeping(false))
-                        {
-                            yield return new WaitForSeconds(0.1f);
+            //            while (true)
+            //            {
+            //                yield return new WaitForFixedUpdate();
+            //                if (inMove)
+            //                {
+            //                    moveTime += Time.fixedDeltaTime;
+            //                    if (!BallPoolGameLogic.controlFromNetwork)
+            //                    {
+            //                        if (CheckIsSleeping(false))
+            //                        {
+            //                            yield return new WaitForSeconds(0.1f);
 
-                            if (CheckIsSleeping(true))
-                            {
-                                yield return StartCoroutine("StopMove");
-                            }
-                            else
-                            {
-                                StopCoroutine("StopMove");
-                            }
-                            checkInProgress = false;
-                            //yield return StartCoroutine(WaitAndCheckMove());
-                        }
-                    }
-                }
-            }
+            //                            if (CheckIsSleeping(true))
+            //                            {
+            //                                yield return StartCoroutine("StopMove");
+            //                            }
+            //                            else
+            //                            {
+            //                                StopCoroutine("StopMove");
+            //                            }
+            //                            checkInProgress = false;
+            ////                            yield return StartCoroutine(WaitAndCheckMove());
+            //            }
+            //        }
+            //    }
+            //}
+
+            yield return null;
         }
         public IEnumerator WaitAndStopMoveFromNetwork(float time)
         {
@@ -215,98 +217,101 @@ namespace BallPool.Mechanics
         }
         private IEnumerator StopMove()
         {
-            inMove = false;
-            foreach (BallListener ball in ballsListener)
-            {
-                if (!ball.body.isKinematic)
-                {
-                    ball.body.velocity = Vector3.zero;
-                    ball.body.angularVelocity = Vector3.zero;
-                    ball.body.Sleep();
-                }
+            //inMove = false;
+            //foreach (BallListener ball in ballsListener)
+            //{
+            //    if (!ball.body.isKinematic)
+            //    {
+            //        ball.body.velocity = Vector3.zero;
+            //        ball.body.angularVelocity = Vector3.zero;
+            //        ball.body.Sleep();
+            //    }
 
-                CallBallSleep(ball.id, ball.body.position);
-            }
+            //    CallBallSleep(ball.id, ball.body.position);
+            //}
 
 
-            if (BallPoolGameLogic.controlInNetwork)
-            {
-                yield return new WaitForSeconds(0.2f);
-                NetworkManager.network.SendRemoteMessage("WaitAndStopMoveFromNetwork", moveTime);
-            }
-            if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
-            {
-                replayManager.AddReplayDataCount();
-            }
-            if (OnEndShot != null)
-            {
-                OnEndShot("");
-            }
-            moveTime = 0.0f;
+            //if (BallPoolGameLogic.controlInNetwork)
+            //{
+            //    yield return new WaitForSeconds(0.2f);
+            //    NetworkManager.network.SendRemoteMessage("WaitAndStopMoveFromNetwork", moveTime);
+            //}
+            //if (BallPoolGameLogic.playMode != GamePlayMode.Replay)
+            //{
+            //    replayManager.AddReplayDataCount();
+            //}
+            //if (OnEndShot != null)
+            //{
+            //    OnEndShot("");
+            //}
+            //moveTime = 0.0f;
+
+            yield return null;
         }
 
         bool CheckIsSleeping(bool forceSleep)
         {
-            float minEnergy = 0.1f;
-            bool isSleep = true;
-            foreach (BallListener ball in ballsListener)
-            {
+            //float minEnergy = 0.1f;
+            //bool isSleep = true;
+            //foreach (BallListener ball in ballsListener)
+            //{
                 
-                bool ballIsSleeping = (!Geometry.SphereInCube(ball.body.position, ball.radius, clothSpace) || ball.body.isKinematic || (ball.body.velocity.magnitude < minEnergy && ball.radius * ball.body.angularVelocity.magnitude < minEnergy));
-                if (!ballIsSleeping)
-                {
-                    isSleep = false;
-                }
-            }
-            return isSleep;
+            //    bool ballIsSleeping = (!Geometry.SphereInCube(ball.body.position, ball.radius, clothSpace) || ball.body.isKinematic || (ball.body.velocity.magnitude < minEnergy && ball.radius * ball.body.angularVelocity.magnitude < minEnergy));
+            //    if (!ballIsSleeping)
+            //    {
+            //        isSleep = false;
+            //    }
+            //}
+            //return isSleep;
+            return false;
         }
 
         public void CallBallSleep(int ballId, Vector3 position)
         {
-            if (OnBallSleep != null)
-            {
-                OnBallSleep(ballId, position);
-            }
+            //if (OnBallSleep != null)
+            //{
+            //    OnBallSleep(ballId, position);
+            //}
         }
 
         public void CallBallMove(int ballId, Vector3 position, Vector3 velocity, Vector3 angularVelocity)
         {
-            if (OnBallMove != null)
-            {
-                OnBallMove(ballId, position, velocity, angularVelocity);
-            }
+            //if (OnBallMove != null)
+            //{
+            //    OnBallMove(ballId, position, velocity, angularVelocity);
+            //}
         }
 
         public void CallBallHitBall(BallListener ball, BallListener hitBall, bool inReplay)
         {
-            if (OnBallHitBall != null)
-            {
-                OnBallHitBall(ball, hitBall, inReplay);
-            }
+            //if (OnBallHitBall != null)
+            //{
+            //    OnBallHitBall(ball, hitBall, inReplay);
+            //}
         }
 
         public void CallBallHitBoard(BallListener ball, bool inReplay)
         {
-            if (OnBallHitBoard != null)
-            {
-                OnBallHitBoard(ball, inReplay);
-            }
+            //if (OnBallHitBoard != null)
+            //{
+            //    OnBallHitBoard(ball, inReplay);
+            //}
         }
 
         public void CallOnBallHitPocket(BallListener ball, PocketListener pocket, bool inReplay)
         {
-            if (OnBallHitPocket != null)
-            {
-                OnBallHitPocket(ball, pocket, inReplay);
-            }
+            //if (OnBallHitPocket != null)
+            //{
+            //    OnBallHitPocket(ball, pocket, inReplay);
+            //}
         }
 
         public void CallOnBallExitFromPocket(BallListener ball, PocketListener pocket, bool inReplay)
         {
-            if (OnBallExitFromPocket != null)
-            {
-                OnBallExitFromPocket(ball, pocket, BallExitType.Reactivate, inReplay);
-            }
+            //if (OnBallExitFromPocket != null)
+            //{
+            //    OnBallExitFromPocket(ball, pocket, BallExitType.Reactivate, inReplay);
+            //}
         }
 
         /// <summary>
@@ -370,15 +375,15 @@ namespace BallPool.Mechanics
 
         public void StartShot(BallListener ball)
         {
-            inMove = true;
-            moveTime = 0.0f;
+            //inMove = true;
+            //moveTime = 0.0f;
            
             ball.body.AddForceAtPosition(impulse.impulse, impulse.point, ForceMode.Impulse);
            
-            if (OnStartShot != null)
-            {
-                OnStartShot("");
-            }
+            //if (OnStartShot != null)
+            //{
+            //    OnStartShot("");
+            //}
         }
 
         public void CheckEndShot(string data)

@@ -97,7 +97,7 @@ public class Load3DTableScene : MonoBehaviour
         }
         yield return null;
 
-        int number = (AightBallPoolPlayer.mainPlayer.coins == AightBallPoolPlayer.otherPlayer.coins) ? 0 : (AightBallPoolPlayer.mainPlayer.coins > AightBallPoolPlayer.otherPlayer.coins ? 1 : 2);
+        int number = (MinipoolPlayer.mainPlayer.coins == MinipoolPlayer.otherPlayer.coins) ? 0 : (MinipoolPlayer.mainPlayer.coins > MinipoolPlayer.otherPlayer.coins ? 1 : 2);
         StartCoroutine(SetTable3DTextureOnStartGame(number));
     }
 

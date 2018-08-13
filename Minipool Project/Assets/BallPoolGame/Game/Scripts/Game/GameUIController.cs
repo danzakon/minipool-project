@@ -194,7 +194,7 @@ public class GameUIController : MonoBehaviour
         physicsManager.Disable();
         if (NetworkManager.mainPlayer != null)
         {
-            NetworkManager.mainPlayer.state = PlayerState.Online;
+//            NetworkManager.mainPlayer.state = PlayerState.Online;
         }
         SceneManager.LoadScene(homeScene);
     }
@@ -216,7 +216,6 @@ public class GameUIController : MonoBehaviour
         }
         else
         {
-            BallPoolPlayer.ReturnMainPlayerCouns();
             BallPoolPlayer.SaveCoins();
         }
 
